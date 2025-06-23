@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .inline-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .inline-group .form-group {
+            flex: 1;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .timer-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 25px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .timer-display {
+            font-size: 3em;
+            font-weight: bold;
+            color: #495057;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-display.active {
+            color: #ff6b6b;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .timer-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            margin: 0 5px;
+            width: auto;
+            padding: 12px 25px;
+            display: inline-block;
+        }
+
+        .timer-btn:hover {
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .workout-log {
+            margin-top: 30px;
+        }
+
+        .workout-log h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .log-entry {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #4ecdc4;
+        }
+
+        .log-entry:hover {
+            transform: translateX(5px);
+            transition: transform 0.2s ease;
+        }
+
+        .log-time {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .clear-btn {
+            background: linear-gradient(45deg, #ff7675, #e84393);
+            width: auto;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            margin-top: 15px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            background: linear-gradient(45deg, #a8edea, #fed6e3);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2d3436;
+        }
+
+        .stat-label {
+            color: #636e72;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💪 Fitness Tracker</h1>
+            <p>Track your workouts and stay motivated!</p>
+        </div>
+        
+        <div class="content">
+            <div class="form-group">
+                <label for="exercise">Exercise:</label>
+                <input type="text" id="exercise" placeholder="e.g., Bench Press, Squats, Deadlifts">
+            </div>
+            
+            <div class="inline-group">
+                <div class="form-group">
+                    <label for="weight">Weight (lbs/kg):</label>
+                    <input type="number" id="weight" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label for="reps">Reps:</label>
+                    <input type="number" id="reps" placeholder="0">
+                </div>
+            </div>
+            
+            <button class="btn" onclick="addSet()">Add Set</button>
+
+            <div class="timer-section">
+                <h3>Rest Timer</h3>
+                <div class="timer-display" id="timerDisplay">5:00</div>
+                <button class="timer-btn" onclick="startTimer()">Start Timer</button>
+                <button class="timer-btn" onclick="stopTimer()">Stop</button>
+                <button class="timer-btn" onclick="resetTimer()">Reset</button>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalSets">0</div>
+                    <div class="stat-label">Total Sets</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalReps">0</div>
+                    <div class="stat-label">Total Reps</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalWeight">0</div>
+                    <div class="stat-label">Total Weight</div>
+                </div>
+            </div>
+
+            <div class="workout-log">
+                <h3>Today's Workout</h3>
+                <div id="workoutLog"></div>
+                <button class="btn clear-btn" onclick="clearLog()">Clear Log</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let workoutData = [];
+        let timerInterval;
+        let timeLeft = 300; // 5 minutes in seconds
+
+        function addSet() {
+            const exercise = document.getElementById('exercise').value;
+            const weight = document.getElementById('weight').value;
+            const reps = document.getElementById('reps').value;
+
+            if (!exercise || !weight || !reps) {
+                alert('Please fill in all fields!');
+                return;
+            }
+
+            const setData = {
+                exercise: exercise,
+                weight: parseFloat(weight),
+                reps: parseInt(reps),
+                time: new Date().toLocaleTimeString()
+            };
+
+            workoutData.push(setData);
+            updateWorkoutLog();
+            updateStats();
+            
+            // Clear form
+            document.getElementById('exercise').value = '';
+            document.getElementById('weight').value = '';
+            document.getElementById('reps').value = '';
+            
+            // Auto-start timer after adding a set
+            startTimer();
+        }
+
+        function updateWorkoutLog() {
+            const logContainer = document.getElementById('workoutLog');
+            logContainer.innerHTML = '';
+
+            workoutData.forEach((set, index) => {
+                const logEntry = document.createElement('div');
+                logEntry.className = 'log-entry';
+                logEntry.innerHTML = `
+                    <strong>${set.exercise}</strong> - ${set.weight} lbs/kg × ${set.reps} reps
+                    <div class="log-time">Added at ${set.time}</div>
+                `;
+                logContainer.appendChild(logEntry);
+            });
+        }
+
+        function updateStats() {
+            const totalSets = workoutData.length;
+            const totalReps = workoutData.reduce((sum, set) => sum + set.reps, 0);
+            const totalWeight = workoutData.reduce((sum, set) => sum + (set.weight * set.reps), 0);
+
+            document.getElementById('totalSets').textContent = totalSets;
+            document.getElementById('totalReps').textContent = totalReps;
+            document.getElementById('totalWeight').textContent = totalWeight.toFixed(1);
+        }
+
+        function startTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+
+            const timerDisplay = document.getElementById('timerDisplay');
+            timerDisplay.classList.add('active');
+
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.classList.remove('active');
+                    alert('Rest time is over! Ready for your next set? 💪');
+                    resetTimer();
+                    return;
+                }
+
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                timeLeft--;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            document.getElementById('timerDisplay').classList.remove('active');
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 300;
+            document.getElementById('timerDisplay').textContent = '5:00';
+            document.getElementById('timerDisplay').classList.remove('active');
+        }
+
+        function clearLog() {
+            if (confirm('Are you sure you want to clear your workout log?')) {
+                workoutData = [];
+                updateWorkoutLog();
+                updateStats();
+            }
+        }
+
+        // Initialize the app
+        updateStats();
+    </script>
+</body>
+</html>
