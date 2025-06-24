@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Workout Preset</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            margin-bottom: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            padding: 8px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .exercise-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .exercise-group select, .exercise-group input {
+            flex: 1;
+        }
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .workout-plan {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            min-height: 100px;
+        }
+        .rest-timer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .rest-timer button {
+            margin: 5px;
+        }
+        .exercise-item {
+            margin-bottom: 10px;
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .exercise-item button {
+            margin-left: 10px;
+        }
+        .preset-group {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            margin-bottom: 15px;
+        }
+        .preset-group .form-group {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>💪 Workout Preset</h1>
+
+    <h2>Plan Today's Workout</h2>
+
+    <div class="form-group">
+        <label>Workout Name:</label>
+        <input type="text" id="workoutName" placeholder="Enter workout name">
+    </div>
+
+    <div class="preset-group">
+        <div class="form-group">
+            <label>Load Preset:</label>
+            <select id="presetSelect" onchange="loadPreset()">
+                <option value="">Select a saved preset</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Delete Preset:</label>
+            <select id="deletePresetSelect">
+                <option value="">Select a preset to delete</option>
+            </select>
+        </div>
+        <button onclick="confirmDeletePreset()">Confirm Delete</button>
+    </div>
+
+    <h3>Add Exercise</h3>
+
+    <div class="exercise-group">
+        <div class="form-group">
+            <label>Exercise:</label>
+            <select id="exerciseSelect">
+                <option>Select an exercise</option>
+                <option>Bench Press</option>
+                <option>Squat</option>
+                <option>Deadlift</option>
+                <option>Overhead Press</option>
+                <option>Pull-Up</option>
+                <option>Push-Up</option>
+                <option>Bicep Curl</option>
+                <option>Tricep Dip</option>
+                <option>Lunge</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Custom Exercise:</label>
+            <input type="text" id="customExercise" placeholder="Or enter custom exercise">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Number of Sets:</label>
+        <input type="number" id="sets" placeholder="Enter number of sets">
+    </div>
+
+    <div class="form-group">
+        <label>Weight (lbs/kg):</label>
+        <input type="number" id="weight" placeholder="Enter weight">
+    </div>
+
+    <div class="form-group">
+        <label>Reps per Set:</label>
+        <input type="number" id="reps" placeholder="Enter reps per set">
+    </div>
+
+    <button onclick="addOrUpdateExercise()">Add Exercise</button>
+
+    <h3>Workout Plan</h3>
+    <div class="workout-plan" id="workoutPlan">
+        <!-- Workout plan content goes here -->
+    </div>
+
+    <button onclick="saveWorkoutPreset()">Save Workout Preset</button>
+    <button onclick="window.location.href='index.html'">Back to Workout Tracker</button>
+
+    <div class="rest-timer">
+        <h3>Rest Timer</h3>
+        <div id="timerDisplay">5:00</div>
+        <button onclick="startTimer()">Start Timer</button>
+        <button onclick="stopTimer()">Stop</button>
+        <button onclick="resetTimer()">Reset</button>
+    </div>
+
+    <script>
+        let timeLeft = 300; // 5 minutes in seconds
+        let timerInterval = null;
+        let currentWorkout = { name: '', exercises: [] };
+        let editingIndex = null;
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        function startTimer() {
+            if (timerInterval) return;
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    return;
+                }
+                timeLeft--;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        function resetTimer() {
+            stopTimer();
+            timeLeft = 300;
+            updateTimerDisplay();
+        }
+
+        function addOrUpdateExercise() {
+            const exerciseSelect = document.getElementById('exerciseSelect').value;
+            const customExercise = document.getElementById('customExercise').value;
+            const sets = document.getElementById('sets').value;
+            const weight = document.getElementById('weight').value;
+            const reps = document.getElementById('reps').value;
+
+            if ((exerciseSelect === 'Select an exercise' && !customExercise) || !sets || !weight || !reps) {
+                alert('Please fill in all fields or select an exercise.');
+                return;
+            }
+
+            const exerciseName = customExercise || exerciseSelect;
+            const exercise = { name: exerciseName, sets, weight, reps };
+
+            if (editingIndex !== null) {
+                currentWorkout.exercises[editingIndex] = exercise;
+                editingIndex = null;
+                document.querySelector('button[onclick="addOrUpdateExercise()"]').textContent = 'Add Exercise';
+            } else {
+                currentWorkout.exercises.push(exercise);
+            }
+
+            renderWorkoutPlan();
+            saveCurrentWorkout();
+            clearExerciseInputs();
+        }
+
+        function editExercise(index) {
+            const exercise = currentWorkout.exercises[index];
+            editingIndex = index;
+            document.getElementById('exerciseSelect').value = ['Bench Press', 'Squat', 'Deadlift', 'Overhead Press', 'Pull-Up', 'Push-Up', 'Bicep Curl', 'Tricep Dip', 'Lunge'].includes(exercise.name) ? exercise.name : 'Select an exercise';
+            document.getElementById('customExercise').value = ['Bench Press', 'Squat', 'Deadlift', 'Overhead Press', 'Pull-Up', 'Push-Up', 'Bicep Curl', 'Tricep Dip', 'Lunge'].includes(exercise.name) ? '' : exercise.name;
+            document.getElementById('sets').value = exercise.sets;
+            document.getElementById('weight').value = exercise.weight;
+            document.getElementById('reps').value = exercise.reps;
+            document.querySelector('button[onclick="addOrUpdateExercise()"]').textContent = 'Update Exercise';
+        }
+
+        function renderWorkoutPlan() {
+            const planDiv = document.getElementById('workoutPlan');
+            planDiv.innerHTML = '';
+            currentWorkout.exercises.forEach((exercise, index) => {
+                const exerciseDiv = document.createElement('div');
+                exerciseDiv.className = 'exercise-item';
+                exerciseDiv.innerHTML = `
+                    ${exercise.name}: ${exercise.sets} sets, ${exercise.weight} lbs/kg, ${exercise.reps} reps
+                    <button onclick="editExercise(${index})">Edit</button>
+                    <button onclick="removeExercise(${index})">Remove</button>
+                `;
+                planDiv.appendChild(exerciseDiv);
+            });
+        }
+
+        function removeExercise(index) {
+            currentWorkout.exercises.splice(index, 1);
+            renderWorkoutPlan();
+            saveCurrentWorkout();
+        }
+
+        function clearExerciseInputs() {
+            document.getElementById('exerciseSelect').value = 'Select an exercise';
+            document.getElementById('customExercise').value = '';
+            document.getElementById('sets').value = '';
+            document.getElementById('weight').value = '';
+            document.getElementById('reps').value = '';
+        }
+
+        function saveCurrentWorkout() {
+            localStorage.setItem('currentWorkout', JSON.stringify(currentWorkout));
+        }
+
+        function saveWorkoutPreset() {
+            const workoutName = document.getElementById('workoutName').value.trim();
+            if (!workoutName || currentWorkout.exercises.length === 0) {
+                alert('Please enter a workout name and add at least one exercise.');
+                return;
+            }
+
+            currentWorkout.name = workoutName;
+            let presets = JSON.parse(localStorage.getItem('workoutPresets') || '[]');
+            const presetIndex = presets.findIndex(p => p.name === workoutName);
+
+            if (presetIndex !== -1) {
+                presets[presetIndex] = currentWorkout; // Update existing preset
+            } else {
+                presets.push(currentWorkout); // Create new preset
+            }
+
+            localStorage.setItem('workoutPresets', JSON.stringify(presets));
+
+            // Save workout session
+            const session = {
+                name: workoutName,
+                exercises: currentWorkout.exercises,
+                date: new Date().toISOString()
+            };
+            let sessions = JSON.parse(localStorage.getItem('workoutSessions') || '[]');
+            sessions.push(session);
+            localStorage.setItem('workoutSessions', JSON.stringify(sessions));
+
+            updatePresetSelects();
+            alert('Workout preset saved!');
+            currentWorkout = { name: '', exercises: [] };
+            document.getElementById('workoutName').value = '';
+            renderWorkoutPlan();
+            saveCurrentWorkout();
+        }
+
+        function confirmDeletePreset() {
+            const presetIndex = document.getElementById('deletePresetSelect').value;
+            if (presetIndex === '') {
+                alert('Please select a preset to delete.');
+                return;
+            }
+
+            const presets = JSON.parse(localStorage.getItem('workoutPresets') || '[]');
+            const presetName = presets[presetIndex]?.name;
+
+            if (!presetName) {
+                alert('Invalid preset selected.');
+                return;
+            }
+
+            if (confirm(`Are you sure you want to delete the preset "${presetName}"?`)) {
+                presets.splice(presetIndex, 1);
+                localStorage.setItem('workoutPresets', JSON.stringify(presets));
+                updatePresetSelects();
+                document.getElementById('deletePresetSelect').value = '';
+                document.getElementById('presetSelect').value = '';
+                alert('Preset deleted!');
+                if (currentWorkout.name === presetName) {
+                    currentWorkout = { name: '', exercises: [] };
+                    document.getElementById('workoutName').value = '';
+                    renderWorkoutPlan();
+                    saveCurrentWorkout();
+                }
+            }
+        }
+
+        function updatePresetSelects() {
+            const presetSelect = document.getElementById('presetSelect');
+            const deletePresetSelect = document.getElementById('deletePresetSelect');
+            presetSelect.innerHTML = '<option value="">Select a saved preset</option>';
+            deletePresetSelect.innerHTML = '<option value="">Select a preset to delete</option>';
+            const presets = JSON.parse(localStorage.getItem('workoutPresets') || '[]');
+            presets.forEach((preset, index) => {
+                const loadOption = document.createElement('option');
+                loadOption.value = index;
+                loadOption.textContent = preset.name;
+                presetSelect.appendChild(loadOption);
+
+                const deleteOption = document.createElement('option');
+                deleteOption.value = index;
+                deleteOption.textContent = preset.name;
+                deletePresetSelect.appendChild(deleteOption);
+            });
+        }
+
+        function loadPreset() {
+            const presetIndex = document.getElementById('presetSelect').value;
+            if (presetIndex === '') return;
+
+            const presets = JSON.parse(localStorage.getItem('workoutPresets') || '[]');
+            if (presets[presetIndex]) {
+                currentWorkout = JSON.parse(JSON.stringify(presets[presetIndex]));
+                document.getElementById('workoutName').value = currentWorkout.name;
+                renderWorkoutPlan();
+                saveCurrentWorkout();
+            }
+        }
+
+        // Initialize
+        const savedWorkout = localStorage.getItem('currentWorkout');
+        if (savedWorkout) {
+            currentWorkout = JSON.parse(savedWorkout);
+            document.getElementById('workoutName').value = currentWorkout.name;
+            renderWorkoutPlan();
+        }
+        updatePresetSelects();
+        updateTimerDisplay();
+    </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Workout Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .preset-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        select {
+            padding: 8px;
+            font-size: 16px;
+        }
+        .workout-summary {
+            margin-top: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .workout-summary h3 {
+            margin-top: 0;
+        }
+        .exercise-item {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏋️‍♂️ Workout Tracker</h1>
+    <button onclick="window.location.href='preset.html'">Plan Workout</button>
+    <div class="preset-group">
+        <select id="presetSelect">
+            <option value="">Select an existing preset</option>
+        </select>
+        <button onclick="continuePreset()">Continue Preset</button>
+    </div>
+
+    <div class="workout-summary">
+        <h3>Last Workout Summary</h3>
+        <div id="summaryContent"></div>
+    </div>
+
+    <script>
+        function populatePresetSelect() {
+            const presetSelect = document.getElementById('presetSelect');
+            presetSelect.innerHTML = '<option value="">Select an existing preset</option>';
+            const presets = JSON.parse(localStorage.getItem('workoutPresets') || '[]');
+            presets.forEach((preset, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = preset.name;
+                presetSelect.appendChild(option);
+            });
+        }
+
+        function continuePreset() {
+            const presetIndex = document.getElementById('presetSelect').value;
+            if (presetIndex === '') {
+                alert('Please select a preset to continue.');
+                return;
+            }
+
+            const presets = JSON.parse(localStorage.getItem('workoutPresets') || '[]');
+            if (presets[presetIndex]) {
+                localStorage.setItem('currentWorkout', JSON.stringify(presets[presetIndex]));
+                window.location.href = 'preset.html';
+            } else {
+                alert('Invalid preset selected.');
+            }
+        }
+
+        function displayLastWorkoutSummary() {
+            const summaryDiv = document.getElementById('summaryContent');
+            const sessions = JSON.parse(localStorage.getItem('workoutSessions') || '[]');
+            if (sessions.length === 0) {
+                summaryDiv.innerHTML = '<p>No workout sessions recorded yet.</p>';
+                return;
+            }
+
+            const lastSession = sessions[sessions.length - 1];
+            const date = new Date(lastSession.date).toLocaleDateString();
+            let html = `<p><strong>Preset:</strong> ${lastSession.name}</p>`;
+            html += `<p><strong>Date:</strong> ${date}</p>`;
+            html += '<ul>';
+            lastSession.exercises.forEach(exercise => {
+                html += `<li class="exercise-item">${exercise.name}: ${exercise.sets} sets, ${exercise.weight} lbs/kg, ${exercise.reps} reps</li>`;
+            });
+            html += '</ul>';
+            summaryDiv.innerHTML = html;
+        }
+
+        // Initialize
+        populatePresetSelect();
+        displayLastWorkoutSummary();
+    </script>
+</body>
+</html>
