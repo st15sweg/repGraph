@@ -21,7 +21,7 @@ function continuePreset() {
     const presets = JSON.parse(localStorage.getItem('workoutPresets') || '[]');
     if (presets[presetIndex]) {
         localStorage.setItem('currentWorkout', JSON.stringify(presets[presetIndex]));
-        window.location.href = 'preset.html';
+        window.location.href = 'src/preset.html';
     } else {
         alert('Invalid workout selected.');
     }
@@ -130,7 +130,7 @@ document.getElementById('getStartedBtn').addEventListener('click', openNameModal
 document.getElementById('saveNameBtn').addEventListener('click', saveName);
 document.getElementById('continuePresetBtn').addEventListener('click', continuePreset);
 document.getElementById('addWorkoutBtn').addEventListener('click', () => {
-    window.location.href = 'preset.html';
+    window.location.href = 'src/preset.html';
 });
 
 document.getElementById('userName').addEventListener('keypress', (e) => {
