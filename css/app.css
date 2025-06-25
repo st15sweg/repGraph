@@ -1,0 +1,300 @@
+/* ==========================================================================
+   1. Global & Root Variables
+   ========================================================================== */
+:root {
+    --primary-bg: #0a0a0a;
+    --secondary-bg: #1a1a1a;
+    --card-bg: #252525;
+    --accent-color: #6366f1;
+    --accent-hover: #5856eb;
+    --text-primary: #ffffff;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    --border-color: #2d2d2d;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+    --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    --border-radius: 12px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--primary-bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+    z-index: -1;
+    animation: backgroundShift 20s ease-in-out infinite;
+}
+@keyframes backgroundShift { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.8; } }
+
+/* ==========================================================================
+   2. Page-Specific Layouts
+   ========================================================================== */
+.container {
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.dashboard-page .container { max-width: 1200px; }
+.preset-page .container { max-width: 800px; align-items: center; }
+
+/* ==========================================================================
+   3. Shared Components (Used on both pages)
+   ========================================================================== */
+h1, h2, h3 { margin-bottom: 20px; color: var(--accent-color); text-align: center; }
+.input-field, .preset-select {
+    width: 100%;
+    padding: 1rem;
+    background: var(--secondary-bg);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+.input-field:focus, .preset-select:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+.input-field::placeholder { color: var(--text-muted); }
+.preset-select { cursor: pointer; margin-bottom: 1rem; }
+.empty-state { text-align: center; color: var(--text-muted); font-style: italic; }
+
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); z-index: 1000; justify-content: center; align-items: center; animation: fadeIn 0.3s ease-out; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-content { background: var(--card-bg); padding: 2.5rem; border-radius: var(--border-radius); width: 90%; max-height: 80vh; overflow-y: auto; position: relative; box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); animation: slideIn 0.3s ease-out; }
+@keyframes slideIn { from { transform: translateY(-20px) scale(0.95); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+.dashboard-page .modal-content { max-width: 400px; }
+.preset-page .modal-content { max-width: 600px; }
+.modal-title { font-size: 1.5rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1.5rem; text-align: center; }
+
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ==========================================================================
+   4. Button Styles
+   ========================================================================== */
+/* Base appearance for most buttons */
+.primary-button, .secondary-button, .cta-button {
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+    border: none;
+    color: var(--text-primary);
+}
+.primary-button:hover, .secondary-button:hover, .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+.cta-button { background: var(--gradient-primary); font-size: 1.1rem; padding: 1rem 2.5rem; position: relative; overflow: hidden; }
+.cta-button::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent); transition: left 0.5s; }
+.cta-button:hover::before { left: 100%; }
+.cta-button:active { transform: translateY(0); }
+.primary-button { background: var(--gradient-primary); }
+.secondary-button { background: var(--secondary-bg); border: 2px solid var(--border-color); font-weight: 500; }
+.secondary-button:hover { border-color: var(--accent-color); background: var(--accent-color); }
+
+/* Layout specific button styles */
+.dashboard-page .action-section .primary-button { flex: 1; min-width: 200px; }
+.dashboard-page .preset-section .secondary-button { width: 100%; }
+.preset-page .primary-button, .preset-page .secondary-button { display: inline-block; margin: 10px 5px; }
+
+/* ==========================================================================
+   5. Dashboard Page Specific Styles (index.html)
+   ========================================================================== */
+.landing { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; animation: fadeInUp 0.8s ease-out; }
+.brand-logo { font-size: 4rem; font-weight: 700; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1rem; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+.brand-subtitle { font-size: 1.5rem; color: var(--text-secondary); margin-bottom: 3rem; font-weight: 300; }
+.main-content { display: none; animation: fadeInUp 0.8s ease-out; }
+.header { text-align: center; margin-bottom: 3rem; }
+.welcome-text { font-size: 2rem; font-weight: 600; margin-bottom: 0.5rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.subtitle { color: var(--text-secondary); font-size: 1.1rem; }
+.action-section { display: flex; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap; }
+.preset-section { background: var(--card-bg); border-radius: var(--border-radius); padding: 1.5rem; margin-bottom: 3rem; border: 1px solid var(--border-color); }
+.preset-title { font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem; }
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+.dashboard-card { background: var(--card-bg); border-radius: var(--border-radius); padding: 2rem; border: 1px solid var(--border-color); transition: var(--transition); position: relative; overflow: hidden; }
+.dashboard-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--gradient-primary); }
+.dashboard-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--accent-color); }
+.card-title { font-size: 1.3rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+.card-icon { font-size: 1.5rem; }
+.card-content { color: var(--text-secondary); line-height: 1.6; }
+.preset-list { list-style: none; padding: 0; }
+.preset-item { background: var(--secondary-bg); padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 0.5rem; border-left: 4px solid var(--accent-color); transition: var(--transition); }
+.preset-item:hover { background: var(--border-color); transform: translateX(4px); }
+.viz-container { display: flex; justify-content: center; align-items: center; height: 200px; position: relative; }
+.fitness-icon { font-size: 4rem; color: var(--accent-color); animation: bounce 2s ease-in-out infinite; }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* ==========================================================================
+   6. Preset Page Specific Styles (preset.html)
+   ========================================================================== */
+.form-group { display: flex; flex-direction: column; margin-bottom: 15px; width: 100%; }
+.form-group label { margin-bottom: 8px; color: var(--text-secondary); font-size: 0.95rem; text-align: left; }
+.weight-group { display: flex; align-items: center; gap: 10px; }
+.weight-group input { flex: 1; }
+
+/* --- FIX FOR THE 'kg' BUTTON --- */
+.weight-unit-btn {
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: var(--border-radius); /* This adds the rounded corners */
+    color: var(--text-primary);
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+}
+.weight-unit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+/* --- END FIX --- */
+
+/* --- UPDATED FOR SINGLE INPUT --- */
+.exercise-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; width: 100%; }
+.exercise-group .form-group { flex-direction: row; align-items: center; gap: 10px; margin-bottom: 0; }
+.exercise-group .form-group label { flex: none; margin-bottom: 0; }
+.exercise-group .form-group input { flex: 1; }
+.exercise-group .secondary-button { margin: 0; padding: 0.8rem 1.2rem; /* Adjusted padding for shorter text */ }
+/* --- END OF UPDATE --- */
+.workout-plan { margin: 20px 0; padding: 15px; background-color: var(--card-bg); border-radius: var(--border-radius); text-align: left; width: 100%; border: 1px solid var(--border-color); }
+
+.timer-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99;
+    background: var(--gradient-primary);
+    border: none;
+    color: var(--text-primary);
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    transition: var(--transition);
+    display: none; /* Hidden by default, JS will show it */
+    align-items: center;
+    justify-content: center;
+}
+.timer-toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+.timer-toggle-btn h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 600;
+}
+.close-timer-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+    transition: color 0.3s;
+}
+.close-timer-btn:hover {
+    color: var(--error-color);
+}
+
+.rest-timer { display: none; position: fixed; bottom: 20px; right: 20px; background: var(--card-bg); padding: 15px; border: 1px solid var(--border-color); border-radius: var(--border-radius); text-align: center; box-shadow: var(--shadow-lg); z-index: 100; }
+.rest-timer h3 { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 10px; }
+.rest-timer button { margin: 5px; padding: 0.8rem 1.2rem; font-size: 0.9rem; border: none; border-radius: var(--border-radius); color: var(--text-primary); cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); }
+.rest-timer button:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.rest-timer .start-button { background-color: #28a745; } .rest-timer .start-button:hover { background-color: #218838; }
+.rest-timer .stop-button { background-color: #dc3545; } .rest-timer .stop-button:hover { background-color: #c82333; }
+.rest-timer .reset-button { background-color: #ffc107e5; color: #ffffff; } .rest-timer .reset-button:hover { background-color: #e0a800; }
+#stopwatchCanvas { border: 1px solid var(--border-color); border-radius: 50%; background-color: var(--secondary-bg); }
+.exercise-item { margin-bottom: 10px; padding: 12px; background-color: var(--secondary-bg); border-radius: 8px; border-left: 4px solid var(--accent-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+.exercise-item button { margin-left: 10px; padding: 8px 12px; font-size: 0.85rem; border-radius: 8px; cursor: pointer; transition: var(--transition); box-shadow: none; border: none; color: var(--text-primary); }
+.exercise-item button:hover { transform: translateY(-1px); }
+.exercise-item .edit-btn { background: var(--accent-color); } .exercise-item .edit-btn:hover { background: var(--accent-hover); }
+.exercise-item .remove-btn { background: var(--error-color); } .exercise-item .remove-btn:hover { background: #d43737; }
+.preset-group { background: var(--card-bg); border-radius: var(--border-radius); padding: 1.5rem; margin-bottom: 3rem; border: 1px solid var(--border-color); width: 100%; }
+.preset-group .form-group { flex-direction: row; align-items: center; gap: 10px; }
+.preset-group .form-group label { flex: none; margin-bottom: 0; }
+.preset-group .form-group select { flex: 1; }
+.preset-group .secondary-button { margin: 0; }
+.category-buttons { display: flex; gap: 10px; margin-bottom: 15px; justify-content: center; flex-wrap: wrap; }
+.category-buttons button { background: var(--secondary-bg); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.8rem 1.2rem; border-radius: var(--border-radius); cursor: pointer; transition: var(--transition); font-size: 0.9rem; }
+.category-buttons button:hover { background: var(--accent-color); border-color: var(--accent-color); transform: translateY(-1px); }
+.exercise-category { margin-bottom: 15px; display: none; padding: 0 10px; }
+.exercise-category h4 { color: var(--accent-color); margin-bottom: 10px; font-size: 1.1rem; text-align: left; }
+.exercise-list { list-style: none; padding: 0; }
+.exercise-list li { padding: 10px; cursor: pointer; border-radius: 8px; margin-bottom: 8px; background-color: var(--secondary-bg); transition: var(--transition); border: 1px solid var(--border-color); }
+.exercise-list li:hover { background-color: var(--border-color); transform: translateX(4px); border-color: var(--accent-color); }
+.close-modal { background: var(--error-color); margin-top: 20px; } .close-modal:hover { background: #d43737; }
+.close-modal-top { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-muted); font-size: 2rem; cursor: pointer; padding: 5px; line-height: 1; transition: color 0.3s; }
+.close-modal-top:hover { color: var(--error-color); }
+
+/* ==========================================================================
+   7. Responsive Design
+   ========================================================================== */
+@media (max-width: 768px) {
+    .container { padding: 1rem; }
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.3rem; }
+    .primary-button, .secondary-button, .cta-button { padding: 0.8rem 1rem; font-size: 0.9rem; }
+    .rest-timer { bottom: 10px; right: 10px; padding: 10px; }
+    .timer-toggle-btn { bottom: 10px; right: 10px; padding: 0.8rem 1rem; }
+    .rest-timer button { padding: 0.6rem 0.8rem; font-size: 0.8rem; }
+    .exercise-item { flex-direction: column; align-items: flex-start; }
+    .exercise-item button { margin-top: 10px; margin-left: 0; width: 100%; }
+    .brand-logo { font-size: 3rem; }
+    .brand-subtitle { font-size: 1.2rem; }
+    .action-section { flex-direction: column; }
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .modal-content { padding: 2rem; margin: 1rem; }
+}
+
+@media (max-width: 480px) {
+    .brand-logo { font-size: 2.5rem; }
+    .welcome-text { font-size: 1.5rem; }
+}/* ==========================================================================
+   8. Custom Color Override for Rest Timer
+   ========================================================================== */
+
+/* This targets the "Rest Timer" text on the floating button */
+.timer-toggle-btn h3 {
+    color: var(--text-primary); /* This makes it white */
+}
+
+/* This targets the "Rest Timer" text inside the pop-up panel */
+.rest-timer h3 {
+    color: var(--text-primary); /* This also makes it white */
+}
