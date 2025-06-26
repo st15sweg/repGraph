@@ -60,6 +60,9 @@ body::before {
 }
 .dashboard-page .container { max-width: 1200px; }
 .preset-page .container { max-width: 800px; align-items: center; }
+/* ADDED FOR PROGRESS PAGE */
+.progress-page .container { max-width: 1000px; align-items: center; }
+
 
 /* ==========================================================================
    3. Shared Components (Used on both pages)
@@ -123,6 +126,18 @@ h1, h2, h3 { margin-bottom: 20px; color: var(--accent-color); text-align: center
 .dashboard-page .preset-section .secondary-button { width: 100%; }
 .preset-page .primary-button, .preset-page .secondary-button { display: inline-block; margin: 10px 5px; }
 
+/* --- STYLE FOR FIXED BUTTON (UPDATED) --- */
+.back-to-top-left-btn {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    z-index: 100;
+    text-decoration: none; /* For <a> tags */
+    padding: 0.6rem 1.2rem; /* Make button smaller */
+    font-size: 0.9rem; /* Make font smaller */
+    line-height: 1.2; /* Better vertical alignment */
+}
+
 /* ==========================================================================
    5. Dashboard Page Specific Styles (index.html)
    ========================================================================== */
@@ -131,7 +146,20 @@ h1, h2, h3 { margin-bottom: 20px; color: var(--accent-color); text-align: center
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 .brand-subtitle { font-size: 1.5rem; color: var(--text-secondary); margin-bottom: 3rem; font-weight: 300; }
 .main-content { display: none; animation: fadeInUp 0.8s ease-out; }
-.header { text-align: center; margin-bottom: 3rem; }
+
+/* --- HEADER UPDATED --- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    flex-wrap: wrap; /* Allows button to wrap below on small screens */
+}
+.header-text {
+    text-align: left;
+}
+/* --- END OF UPDATE --- */
+
 .welcome-text { font-size: 2rem; font-weight: 600; margin-bottom: 0.5rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .subtitle { color: var(--text-secondary); font-size: 1.1rem; }
 .action-section { display: flex; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap; }
@@ -152,6 +180,174 @@ h1, h2, h3 { margin-bottom: 20px; color: var(--accent-color); text-align: center
 @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
 /* ==========================================================================
+   5.5. Profile Panel Styles
+   ========================================================================== */
+/* --- PROFILE TOGGLE BUTTON UPDATED --- */
+.profile-toggle-btn {
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: var(--shadow-sm);
+    display: none; /* JS will show this when logged in */
+}
+.profile-toggle-btn:hover {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.profile-panel {
+    position: fixed;
+    top: 0;
+    right: -350px; /* Initially hidden off-screen */
+    width: 350px;
+    height: 100%;
+    background: var(--secondary-bg);
+    z-index: 999;
+    box-shadow: var(--shadow-lg);
+    border-left: 1px solid var(--border-color);
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+}
+.profile-panel.is-open {
+    right: 0; /* Slide in */
+}
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--card-bg);
+}
+.profile-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+}
+.close-profile-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.3s; /* Removed transform transition */
+    font-weight: bold;
+}
+/* --- CLOSE BUTTON HOVER STATE UPDATED --- */
+.close-profile-btn:hover {
+    color: var(--accent-color);
+}
+.profile-content {
+    padding: 2rem;
+    text-align: center;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    font-weight: 600;
+    margin: 0 auto 1.5rem auto;
+    border: 4px solid var(--card-bg);
+    box-shadow: var(--shadow-md);
+}
+.profile-name {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+}
+.profile-stats {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+.stat-item {
+    text-align: center;
+}
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    margin-bottom: 0.25rem;
+}
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   5.6. Workout History Modal Styles (ADDED)
+   ========================================================================== */
+.history-item {
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.history-item:last-child {
+    margin-bottom: 0;
+}
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+.history-header strong {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+}
+.history-header .date {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+.history-exercise-list {
+    list-style: none;
+    padding-left: 0;
+}
+.history-exercise-list li {
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    background: var(--card-bg);
+}
+.history-exercise-list li strong {
+    color: var(--text-primary);
+}
+.history-exercise-list li span {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    display: block;
+    margin-top: 0.25rem;
+}
+
+/* ==========================================================================
    6. Preset Page Specific Styles (preset.html)
    ========================================================================== */
 .form-group { display: flex; flex-direction: column; margin-bottom: 15px; width: 100%; }
@@ -159,14 +355,13 @@ h1, h2, h3 { margin-bottom: 20px; color: var(--accent-color); text-align: center
 .weight-group { display: flex; align-items: center; gap: 10px; }
 .weight-group input { flex: 1; }
 
-/* --- FIX FOR THE 'kg' BUTTON --- */
 .weight-unit-btn {
     padding: 0.8rem 1.2rem;
     font-size: 1rem;
     cursor: pointer;
     background: var(--gradient-primary);
     border: none;
-    border-radius: var(--border-radius); /* This adds the rounded corners */
+    border-radius: var(--border-radius);
     color: var(--text-primary);
     transition: var(--transition);
     box-shadow: var(--shadow-md);
@@ -175,15 +370,49 @@ h1, h2, h3 { margin-bottom: 20px; color: var(--accent-color); text-align: center
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
 }
-/* --- END FIX --- */
 
-/* --- UPDATED FOR SINGLE INPUT --- */
 .exercise-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; width: 100%; }
 .exercise-group .form-group { flex-direction: row; align-items: center; gap: 10px; margin-bottom: 0; }
 .exercise-group .form-group label { flex: none; margin-bottom: 0; }
 .exercise-group .form-group input { flex: 1; }
-.exercise-group .secondary-button { margin: 0; padding: 0.8rem 1.2rem; /* Adjusted padding for shorter text */ }
-/* --- END OF UPDATE --- */
+.exercise-group .secondary-button { margin: 0; padding: 0.8rem 1.2rem; }
+
+/* --- STYLES FOR EXERCISE HISTORY CONTAINER --- */
+.exercise-history-container {
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1rem 1.5rem;
+    margin-bottom: 15px;
+}
+.exercise-history-container h4 {
+    text-align: left;
+    font-size: 1rem;
+    color: var(--accent-color);
+    margin-bottom: 0.75rem;
+}
+.history-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+.history-entry:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.history-entry .date {
+    color: var(--text-muted);
+}
+.history-entry .performance {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+/* --- END OF STYLES --- */
+
 .workout-plan { margin: 20px 0; padding: 15px; background-color: var(--card-bg); border-radius: var(--border-radius); text-align: left; width: 100%; border: 1px solid var(--border-color); }
 
 .timer-toggle-btn {
@@ -199,7 +428,7 @@ h1, h2, h3 { margin-bottom: 20px; color: var(--accent-color); text-align: center
     box-shadow: var(--shadow-md);
     cursor: pointer;
     transition: var(--transition);
-    display: none; /* Hidden by default, JS will show it */
+    display: none;
     align-items: center;
     justify-content: center;
 }
@@ -261,6 +490,80 @@ h1, h2, h3 { margin-bottom: 20px; color: var(--accent-color); text-align: center
 .close-modal-top { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-muted); font-size: 2rem; cursor: pointer; padding: 5px; line-height: 1; transition: color 0.3s; }
 .close-modal-top:hover { color: var(--error-color); }
 
+/* --- LIVE WORKOUT MODE STYLES --- */
+.live-mode-title {
+    color: var(--success-color);
+}
+.exercise-item-live {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+.set-tracker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+}
+.set-checkbox-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background-color: var(--secondary-bg);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 600;
+    color: var(--text-secondary);
+    user-select: none;
+}
+.set-checkbox-label.checked {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+    color: var(--text-primary);
+    transform: scale(1.05);
+}
+.set-checkbox {
+    display: none; /* Hide the actual checkbox */
+}
+.action-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+    margin: 20px 0 0 0;
+}
+
+/* --- PROGRESS PAGE STYLES (ADDED) --- */
+.progress-controls {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    width: 100%;
+}
+.progress-controls .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+.progress-controls .preset-select {
+    margin-bottom: 0;
+}
+.chart-container {
+    width: 100%;
+    padding: 2rem;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
 /* ==========================================================================
    7. Responsive Design
    ========================================================================== */
@@ -280,12 +583,38 @@ h1, h2, h3 { margin-bottom: 20px; color: var(--accent-color); text-align: center
     .action-section { flex-direction: column; }
     .dashboard-grid { grid-template-columns: 1fr; }
     .modal-content { padding: 2rem; margin: 1rem; }
+    
+    .header {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: center;
+    }
+    .header-text {
+        text-align: center;
+    }
+    
+    .profile-panel {
+        width: 300px;
+        right: -300px;
+    }
+    .progress-controls {
+        flex-direction: column;
+    }
+    .back-to-top-left-btn {
+        top: 1rem;
+        left: 1rem;
+    }
 }
 
 @media (max-width: 480px) {
     .brand-logo { font-size: 2.5rem; }
     .welcome-text { font-size: 1.5rem; }
-}/* ==========================================================================
+    .profile-panel {
+        width: 100%;
+        right: -100%;
+    }
+}
+/* ==========================================================================
    8. Custom Color Override for Rest Timer
    ========================================================================== */
 

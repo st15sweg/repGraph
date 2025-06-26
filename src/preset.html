@@ -9,67 +9,74 @@
 </head>
 <!-- ADDED CLASS HERE -->
 <body class="preset-page">
+    <button id="backToDashboardBtn" class="secondary-button back-to-top-left-btn">< Back to Dashboard</button>
     <div class="container">
-        <h1>💪 Plan Your Workout</h1>
-        <!-- ... rest of the file is unchanged ... -->
-        <div class="form-group">
-            <label>Workout Name:</label>
-            <input type="text" id="workoutName" placeholder="Enter workout name" class="input-field">
-        </div>
-       <!-- PASTE THIS NEW BLOCK IN -->
-<div class="preset-group">
-    <h3>Load/Delete Presets</h3>
-    
-    <!-- This "Load" section is always visible -->
-    <div class="form-group">
-        <label>Load Preset:</label>
-        <select id="presetSelect" class="preset-select">
-            <option value="">Select a saved preset</option>
-        </select>
-    </div>
-    
-    <!-- This "Delete" section is the only part we hide/show with JavaScript -->
-    <div id="delete-controls-section" class="form-group" style="display: none; flex-direction: row; align-items: center; justify-content: space-between;">
-        <label style="flex: 1; margin-bottom: 0;">Delete Preset:</label>
-        <select id="deletePresetSelect" class="preset-select" style="flex: 2; margin-right: 10px;">
-            <option value="">Select a preset to delete</option>
-        </select>
-        <button id="confirmDeleteBtn" class="secondary-button" style="flex: 1; margin: 0;">Confirm Delete</button>
-    </div>
-</div>
-<!-- END OF NEW BLOCK -->
+        <h1 id="pageTitle">💪 Plan Your Workout</h1>
         
-        <h3>Add Exercise</h3>
-        <!-- *** THIS BLOCK IS UPDATED *** -->
-        <div class="exercise-group">
+        <!-- This entire block will be hidden during a live workout -->
+        <div id="planningControls">
             <div class="form-group">
-                <label>Exercise:</label>
-                <input type="text" id="exerciseInput" placeholder="Type or select an exercise" class="input-field">
-                <button id="selectExerciseBtn" class="secondary-button">Select</button>
+                <label>Workout Name:</label>
+                <input type="text" id="workoutName" placeholder="Enter workout name" class="input-field">
             </div>
+            
+            <div class="preset-group">
+                <h3>Load/Delete Presets</h3>
+                <div class="form-group">
+                    <label>Load Preset:</label>
+                    <select id="presetSelect" class="preset-select">
+                        <option value="">Select a saved preset</option>
+                    </select>
+                </div>
+                <div id="delete-controls-section" class="form-group" style="display: none; flex-direction: row; align-items: center; justify-content: space-between;">
+                    <label style="flex: 1; margin-bottom: 0;">Delete Preset:</label>
+                    <select id="deletePresetSelect" class="preset-select" style="flex: 2; margin-right: 10px;">
+                        <option value="">Select a preset to delete</option>
+                    </select>
+                    <button id="confirmDeleteBtn" class="secondary-button" style="flex: 1; margin: 0;">Confirm Delete</button>
+                </div>
+            </div>
+            
+            <h3>Add Exercise</h3>
+            <div class="exercise-group">
+                <div class="form-group">
+                    <label>Exercise:</label>
+                    <input type="text" id="exerciseInput" placeholder="Type or select an exercise" class="input-field">
+                    <button id="selectExerciseBtn" class="secondary-button">Select</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Number of Sets:</label>
+                <input type="number" id="sets" placeholder="Enter number of sets" class="input-field">
+            </div>
+            <div class="form-group weight-group">
+                <label>Weight:</label>
+                <input type="number" id="weight" placeholder="Enter weight" class="input-field">
+                <button id="weightUnitBtn" class="weight-unit-btn">kg</button>
+            </div>
+            <div class="form-group">
+                <label>Reps per Set:</label>
+                <input type="number" id="reps" placeholder="Enter reps per set" class="input-field">
+            </div>
+            <button id="addOrUpdateExerciseBtn" class="primary-button">Add Exercise</button>
         </div>
-        <!-- *** END OF UPDATE *** -->
-        <div class="form-group">
-            <label>Number of Sets:</label>
-            <input type="number" id="sets" placeholder="Enter number of sets" class="input-field">
-        </div>
-        <div class="form-group weight-group">
-            <label>Weight:</label>
-            <input type="number" id="weight" placeholder="Enter weight" class="input-field">
-            <button id="weightUnitBtn" class="weight-unit-btn">kg</button>
-        </div>
-        <div class="form-group">
-            <label>Reps per Set:</label>
-            <input type="number" id="reps" placeholder="Enter reps per set" class="input-field">
-        </div>
-        <button id="addOrUpdateExerciseBtn" class="primary-button">Add Exercise</button>
         
         <h3>Current Workout Plan</h3>
         <div class="workout-plan" id="workoutPlan">
             <div class="empty-state">No exercises added yet.</div>
         </div>
-        <button id="saveWorkoutPresetBtn" class="primary-button">Save Workout Preset</button>
-        <button id="backToDashboardBtn" class="secondary-button">Back to Dashboard</button>
+
+        <!-- ===== BUTTONS UPDATED ===== -->
+        <div class="action-buttons-container">
+            <!-- Planning Mode Buttons -->
+            <button id="startWorkoutBtn" class="primary-button">Start Workout</button>
+            <button id="savePlanBtn" class="secondary-button">Save Plan Only</button>
+
+            <!-- Live Mode Buttons (hidden by default) -->
+            <button id="finishWorkoutBtn" class="primary-button" style="display:none;">Finish & Save Workout</button>
+            <button id="cancelWorkoutBtn" class="secondary-button" style="display:none;">Cancel Workout</button>
+        </div>
+        <!-- ===== END OF UPDATE ===== -->
     </div>
     
     <button id="showTimerBtn" class="timer-toggle-btn">

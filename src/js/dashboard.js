@@ -1,5 +1,81 @@
 // ===== FUNCTION DEFINITIONS =====
 
+// ADDED: Finds the most frequently logged exercise
+function findFavoriteExercise() {
+    const sessions = JSON.parse(localStorage.getItem('workoutSessions') || '[]');
+    if (sessions.length === 0) return 'None';
+
+    const exerciseCounts = {};
+    sessions.forEach(session => {
+        session.exercises.forEach(exercise => {
+            exerciseCounts[exercise.name] = (exerciseCounts[exercise.name] || 0) + 1;
+        });
+    });
+
+    if (Object.keys(exerciseCounts).length === 0) return 'None';
+
+    // Find the exercise with the highest count
+    const favorite = Object.entries(exerciseCounts).reduce((a, b) => a[1] > b[1] ? a : b);
+    return favorite[0];
+}
+
+// ADDED: Populates the profile panel with user data
+function populateProfilePanel() {
+    const userName = localStorage.getItem('userName') || 'User';
+    const sessions = JSON.parse(localStorage.getItem('workoutSessions') || '[]');
+    
+    document.getElementById('profileName').textContent = userName;
+    
+    // Create avatar from initials
+    const initials = userName.split(' ').map(name => name[0]).join('').substring(0, 2).toUpperCase();
+    document.getElementById('profileAvatar').textContent = initials;
+    
+    document.getElementById('totalWorkouts').textContent = sessions.length;
+    document.getElementById('favoriteExercise').textContent = findFavoriteExercise();
+}
+
+// NEW: Populates the workout history modal
+function populateWorkoutHistory() {
+    const historyList = document.getElementById('historyList');
+    const sessions = JSON.parse(localStorage.getItem('workoutSessions') || '[]');
+    
+    if (sessions.length === 0) {
+        historyList.innerHTML = `<div class="empty-state">You haven't completed any workouts yet.</div>`;
+        return;
+    }
+    
+    historyList.innerHTML = ''; // Clear previous content
+    
+    // Show most recent sessions first
+    sessions.slice().reverse().forEach(session => {
+        const date = new Date(session.date).toLocaleDateString('en-US', {
+            year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        let exercisesHTML = '<ul class="history-exercise-list">';
+        session.exercises.forEach(ex => {
+            exercisesHTML += `
+                <li>
+                    <strong>${ex.name}</strong>
+                    <span>${ex.sets} sets × ${ex.reps} reps @ ${ex.weight}${ex.unit || 'kg'}</span>
+                </li>
+            `;
+        });
+        exercisesHTML += '</ul>';
+
+        const sessionDiv = document.createElement('div');
+        sessionDiv.className = 'history-item';
+        sessionDiv.innerHTML = `
+            <div class="history-header">
+                <strong>${session.name}</strong>
+                <span class="date">${date}</span>
+            </div>
+            ${exercisesHTML}
+        `;
+        historyList.appendChild(sessionDiv);
+    });
+}
+
 function populatePresetSelect() {
     const presetSelect = document.getElementById('presetSelect');
     presetSelect.innerHTML = '<option value="">Select a saved workout</option>';
@@ -65,26 +141,7 @@ function displayLastWorkoutSummary() {
     summaryDiv.innerHTML = html;
 }
 
-function displayPresets() {
-    const presetList = document.getElementById('presetList');
-    const presets = JSON.parse(localStorage.getItem('workoutPresets') || '[]');
-    
-    if (presets.length === 0) {
-        presetList.innerHTML = '<li class="empty-state">Create your first workout plan!</li>';
-    } else {
-        presetList.innerHTML = '';
-        presets.forEach(preset => {
-            const li = document.createElement('li');
-            li.className = 'preset-item';
-            li.innerHTML = `
-                <strong>${preset.name}</strong>
-                <div style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.2rem;">
-                    ${preset.exercises.length} exercises
-                </div>`;
-            presetList.appendChild(li);
-        });
-    }
-}
+// REMOVED: displayPresets() function is no longer needed
 
 function saveName() {
     const userNameInput = document.getElementById('userName');
@@ -95,9 +152,10 @@ function saveName() {
         document.getElementById('nameModal').style.display = 'none';
         document.getElementById('landingPage').style.display = 'none';
         document.getElementById('mainContent').style.display = 'block';
+        document.getElementById('profileToggleBtn').style.display = 'block'; 
         displayLastWorkoutSummary();
-        displayPresets();
         populatePresetSelect();
+        populateProfilePanel(); 
     } else {
         alert('Please enter your name to continue.');
     }
@@ -114,11 +172,13 @@ function checkName() {
         document.getElementById('greeting').textContent = `Welcome back, ${userName}!`;
         document.getElementById('landingPage').style.display = 'none';
         document.getElementById('mainContent').style.display = 'block';
+        document.getElementById('profileToggleBtn').style.display = 'block';
         displayLastWorkoutSummary();
-        displayPresets();
         populatePresetSelect();
+        populateProfilePanel();
     } else {
         document.getElementById('landingPage').style.display = 'flex';
+        document.getElementById('profileToggleBtn').style.display = 'none';
     }
 }
 
@@ -138,6 +198,42 @@ document.getElementById('userName').addEventListener('keypress', (e) => {
         saveName();
     }
 });
+
+// Event listeners for the profile panel
+const profilePanel = document.getElementById('profilePanel');
+const profileToggleBtn = document.getElementById('profileToggleBtn');
+const closeProfileBtn = document.getElementById('closeProfileBtn');
+
+if(profileToggleBtn) {
+    profileToggleBtn.addEventListener('click', () => {
+        populateProfilePanel(); // Refresh data on open
+        profilePanel.classList.add('is-open');
+    });
+}
+
+if(closeProfileBtn) {
+    closeProfileBtn.addEventListener('click', () => {
+        profilePanel.classList.remove('is-open');
+    });
+}
+
+// ADDED: Event listeners for the history modal
+const historyModal = document.getElementById('historyModal');
+const viewHistoryBtn = document.getElementById('viewHistoryBtn');
+const closeHistoryBtn = document.getElementById('closeHistoryBtn');
+
+if (viewHistoryBtn) {
+    viewHistoryBtn.addEventListener('click', () => {
+        populateWorkoutHistory();
+        historyModal.style.display = 'flex';
+    });
+}
+
+if (closeHistoryBtn) {
+    closeHistoryBtn.addEventListener('click', () => {
+        historyModal.style.display = 'none';
+    });
+}
 
 // Initialize the page on load
 checkName();

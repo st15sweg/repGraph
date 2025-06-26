@@ -11,6 +11,7 @@ const exercisesByCategory = {
 let currentWorkout = { name: '', exercises: [] };
 let editingIndex = null;
 let currentWeightUnit = 'kg';
+let isLiveMode = false;
 
 // Timer and Stopwatch variables
 let timeLeft = 300;
@@ -20,6 +21,53 @@ let stopwatchInterval = null;
 let stopwatchCtx;
 
 // ===== FUNCTION DEFINITIONS =====
+
+// NEW: Shows/hides recent performance for a given exercise
+function displayExerciseHistory(exerciseName) {
+    const historyContainer = document.getElementById('exerciseHistoryContainer');
+    const historyContent = document.getElementById('exerciseHistoryContent');
+    const allSessions = JSON.parse(localStorage.getItem('workoutSessions') || '[]');
+
+    const relevantPerformances = [];
+    // Go through all sessions in reverse (most recent first)
+    allSessions.slice().reverse().forEach(session => {
+        // Find exercises in that session that match the name
+        session.exercises.forEach(ex => {
+            if (ex.name.toLowerCase() === exerciseName.toLowerCase()) {
+                relevantPerformances.push({
+                    date: session.date,
+                    details: `${ex.sets} sets × ${ex.reps} reps @ ${ex.weight}${ex.unit || 'kg'}`
+                });
+            }
+        });
+    });
+
+    // Take the last 3 found
+    const recentPerformances = relevantPerformances.slice(0, 3);
+
+    if (recentPerformances.length > 0) {
+        let html = '';
+        recentPerformances.forEach(perf => {
+            const date = new Date(perf.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            html += `
+                <div class="history-entry">
+                    <span class="date">${date}</span>
+                    <span class="performance">${perf.details}</span>
+                </div>
+            `;
+        });
+        historyContent.innerHTML = html;
+        historyContainer.style.display = 'block';
+    } else {
+        // No history for this exercise, so hide the container
+        historyContent.innerHTML = '<div class="empty-state" style="font-size: 0.9rem;">No history for this exercise yet. Go for it!</div>';
+        historyContainer.style.display = 'block';
+    }
+}
+
+function hideExerciseHistory() {
+    document.getElementById('exerciseHistoryContainer').style.display = 'none';
+}
 
 function formatTime(totalSeconds) {
     const minutes = Math.floor(totalSeconds / 60);
@@ -101,6 +149,7 @@ function closeExerciseModal() {
 
 function selectExercise(exercise) {
     document.getElementById('exerciseInput').value = exercise;
+    displayExerciseHistory(exercise); // UPDATED: Show history on select
     closeExerciseModal();
 }
 
@@ -125,7 +174,7 @@ function addOrUpdateExercise() {
         alert('Please fill in all exercise fields.');
         return;
     }
-    const exercise = { name: exerciseName, sets: parseInt(sets), weight: parseFloat(weight), unit: currentWeightUnit, reps: parseInt(reps) };
+    const exercise = { name: exerciseName, sets: parseInt(sets), weight: parseFloat(weight), unit: currentWeightUnit, reps: parseInt(reps), completed: [] };
 
     if (editingIndex !== null) {
         currentWorkout.exercises[editingIndex] = exercise;
@@ -148,6 +197,7 @@ function editExercise(index) {
     currentWeightUnit = exercise.unit || 'kg';
     document.getElementById('weightUnitBtn').textContent = currentWeightUnit;
     document.getElementById('addOrUpdateExerciseBtn').textContent = 'Update Exercise';
+    displayExerciseHistory(exercise.name); // Show history for the exercise being edited
     window.scrollTo(0, 0);
 }
 
@@ -166,21 +216,45 @@ function renderWorkoutPlan() {
         planDiv.innerHTML = '<div class="empty-state">No exercises added yet.</div>';
         return;
     }
+
     currentWorkout.exercises.forEach((ex, index) => {
         const exerciseDiv = document.createElement('div');
         exerciseDiv.className = 'exercise-item';
-        exerciseDiv.innerHTML = `
-            <div>
-                <strong>${ex.name}</strong><br>
-                <span>${ex.sets} sets × ${ex.reps} reps @ ${ex.weight} ${ex.unit}</span>
-            </div>
-            <div>
-                <button class="edit-btn" data-index="${index}">Edit</button>
-                <button class="remove-btn" data-index="${index}">Remove</button>
-            </div>`;
+
+        if (isLiveMode) {
+            exerciseDiv.classList.add('exercise-item-live');
+            let setCheckboxesHTML = '<div class="set-tracker">';
+            for (let i = 0; i < ex.sets; i++) {
+                const isChecked = ex.completed[i];
+                setCheckboxesHTML += `
+                    <label class="set-checkbox-label ${isChecked ? 'checked' : ''}" for="set-${index}-${i}">
+                        ${i + 1}
+                        <input type="checkbox" class="set-checkbox" id="set-${index}-${i}" data-ex-index="${index}" data-set-index="${i}" ${isChecked ? 'checked' : ''}>
+                    </label>
+                `;
+            }
+            setCheckboxesHTML += '</div>';
+            exerciseDiv.innerHTML = `
+                <div>
+                    <strong>${ex.name}</strong><br>
+                    <span>${ex.sets} sets × ${ex.reps} reps @ ${ex.weight} ${ex.unit}</span>
+                </div>
+                ${setCheckboxesHTML}`;
+        } else {
+            exerciseDiv.innerHTML = `
+                <div>
+                    <strong>${ex.name}</strong><br>
+                    <span>${ex.sets} sets × ${ex.reps} reps @ ${ex.weight} ${ex.unit}</span>
+                </div>
+                <div>
+                    <button class="edit-btn" data-index="${index}">Edit</button>
+                    <button class="remove-btn" data-index="${index}">Remove</button>
+                </div>`;
+        }
         planDiv.appendChild(exerciseDiv);
     });
 }
+
 
 function clearExerciseInputs() {
     document.getElementById('exerciseInput').value = '';
@@ -191,54 +265,129 @@ function clearExerciseInputs() {
     document.getElementById('weightUnitBtn').textContent = currentWeightUnit;
     document.getElementById('addOrUpdateExerciseBtn').textContent = 'Add Exercise';
     editingIndex = null;
+    hideExerciseHistory(); // UPDATED: Hide history when clearing inputs
 }
 
 function saveCurrentWorkout() {
     localStorage.setItem('currentWorkout', JSON.stringify(currentWorkout));
 }
 
-// *** NEW FUNCTION TO SHOW/HIDE THE DELETE SECTION ***
 function toggleDeleteSectionVisibility() {
     const presets = JSON.parse(localStorage.getItem('workoutPresets') || '[]');
     const deleteSection = document.getElementById('delete-controls-section');
     if (deleteSection) {
         if (presets && presets.length > 0) {
-            deleteSection.style.display = 'flex'; // Show it
+            deleteSection.style.display = 'flex';
         } else {
-            deleteSection.style.display = 'none'; // Hide it
+            deleteSection.style.display = 'none';
         }
     }
 }
 
-function saveWorkoutPreset() {
+function saveWorkoutPlan() {
     const workoutName = document.getElementById('workoutName').value.trim();
-    if (!workoutName || currentWorkout.exercises.length === 0) {
-        alert('Please enter a workout name and add at least one exercise.');
+    if (!workoutName) {
+        alert('Please enter a workout name to save the plan.');
         return;
     }
+    if(currentWorkout.exercises.length === 0){
+        alert('Please add at least one exercise to save the plan.');
+        return;
+    }
+    
     currentWorkout.name = workoutName;
     let presets = JSON.parse(localStorage.getItem('workoutPresets') || '[]');
     const presetIndex = presets.findIndex(p => p.name === workoutName);
+    
     if (presetIndex > -1) {
-        presets[presetIndex] = currentWorkout;
+        if (confirm(`A preset named "${workoutName}" already exists. Do you want to overwrite it?`)) {
+            presets[presetIndex] = currentWorkout;
+        } else {
+            return; 
+        }
     } else {
         presets.push(currentWorkout);
     }
-    localStorage.setItem('workoutPresets', JSON.stringify(presets));
     
-    const session = { ...currentWorkout, date: new Date().toISOString() };
+    localStorage.setItem('workoutPresets', JSON.stringify(presets));
+    updatePresetSelects();
+    alert(`Workout plan "${workoutName}" saved!`);
+    toggleDeleteSectionVisibility();
+}
+
+function toggleLiveMode(live) {
+    isLiveMode = live;
+    const planningControls = document.getElementById('planningControls');
+    const pageTitle = document.getElementById('pageTitle');
+    
+    const startBtn = document.getElementById('startWorkoutBtn');
+    const savePlanBtn = document.getElementById('savePlanBtn');
+    const finishBtn = document.getElementById('finishWorkoutBtn');
+    const cancelBtn = document.getElementById('cancelWorkoutBtn');
+
+    if (live) {
+        planningControls.style.display = 'none';
+        pageTitle.textContent = '🔥 Workout in Progress';
+        pageTitle.classList.add('live-mode-title');
+        
+        startBtn.style.display = 'none';
+        savePlanBtn.style.display = 'none';
+        finishBtn.style.display = 'inline-block';
+        cancelBtn.style.display = 'inline-block';
+    } else {
+        planningControls.style.display = 'block';
+        pageTitle.textContent = '💪 Plan Your Workout';
+        pageTitle.classList.remove('live-mode-title');
+
+        startBtn.style.display = 'inline-block';
+        savePlanBtn.style.display = 'inline-block';
+        finishBtn.style.display = 'none';
+        cancelBtn.style.display = 'none';
+    }
+    renderWorkoutPlan();
+}
+
+function startWorkout() {
+    if (currentWorkout.exercises.length === 0) {
+        alert('Please add at least one exercise to start a workout.');
+        return;
+    }
+    if (!document.getElementById('workoutName').value.trim()) {
+        alert('Please give your workout a name before starting.');
+        return;
+    }
+    currentWorkout.name = document.getElementById('workoutName').value.trim();
+    toggleLiveMode(true);
+}
+
+function finishWorkout() {
+    const completedExercises = currentWorkout.exercises.filter(ex => ex.completed && ex.completed.some(c => c === true));
+    
+    if (completedExercises.length === 0) {
+        alert("You haven't completed any sets. Finish at least one set to save the workout.");
+        return;
+    }
+    
+    const session = { 
+        name: currentWorkout.name,
+        date: new Date().toISOString(),
+        exercises: completedExercises.map(ex => ({...ex, sets: ex.completed.filter(c => c === true).length }))
+    };
+    
     let sessions = JSON.parse(localStorage.getItem('workoutSessions') || '[]');
     sessions.push(session);
     localStorage.setItem('workoutSessions', JSON.stringify(sessions));
 
-    updatePresetSelects();
-    alert('Workout preset saved!');
-    currentWorkout = { name: '', exercises: [] };
-    document.getElementById('workoutName').value = '';
-    renderWorkoutPlan();
-    saveCurrentWorkout();
-    
-    toggleDeleteSectionVisibility(); // *** Call the function after saving
+    alert('Great job! Workout saved.');
+    localStorage.removeItem('currentWorkout');
+    window.location.href = '../index.html';
+}
+
+function cancelWorkout() {
+    if (confirm('Are you sure you want to cancel this workout? Your progress will not be saved.')) {
+        currentWorkout.exercises.forEach(ex => ex.completed = []);
+        toggleLiveMode(false);
+    }
 }
 
 function confirmDeletePreset() {
@@ -261,8 +410,7 @@ function confirmDeletePreset() {
             saveCurrentWorkout();
         }
         alert('Preset deleted!');
-
-        toggleDeleteSectionVisibility(); // *** Call the function after deleting
+        toggleDeleteSectionVisibility();
     }
 }
 
@@ -286,6 +434,11 @@ function loadPreset() {
     const presets = JSON.parse(localStorage.getItem('workoutPresets') || '[]');
     if (presets[presetIndex]) {
         currentWorkout = JSON.parse(JSON.stringify(presets[presetIndex]));
+        currentWorkout.exercises.forEach(ex => {
+            if (!ex.completed) {
+                ex.completed = [];
+            }
+        });
         document.getElementById('workoutName').value = currentWorkout.name;
         renderWorkoutPlan();
         saveCurrentWorkout();
@@ -326,12 +479,10 @@ function populateExerciseModal() {
 
 // ===== ATTACH EVENT LISTENERS & INITIALIZE =====
 document.addEventListener('DOMContentLoaded', () => {
-    // Populate dynamic content
     populateExerciseModal();
     updatePresetSelects();
-    toggleDeleteSectionVisibility(); // *** Call the function on page load ***
+    toggleDeleteSectionVisibility();
 
-    // Load current workout from storage
     const savedWorkout = localStorage.getItem('currentWorkout');
     if (savedWorkout) {
         currentWorkout = JSON.parse(savedWorkout);
@@ -339,54 +490,77 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     renderWorkoutPlan();
     
-    // Initialize timer/stopwatch display
     updateTimerDisplay();
 
-    // --- START OF NEW TIMER TOGGLE LOGIC ---
     const showTimerBtn = document.getElementById('showTimerBtn');
     const closeTimerBtn = document.getElementById('closeTimerBtn');
     const restTimerDiv = document.querySelector('.rest-timer');
-
-    // Make sure the button is visible on page load
     showTimerBtn.style.display = 'flex';
-
     showTimerBtn.addEventListener('click', () => {
         restTimerDiv.style.display = 'block';
         showTimerBtn.style.display = 'none';
     });
-
     closeTimerBtn.addEventListener('click', () => {
         restTimerDiv.style.display = 'none';
-        showTimerBtn.style.display = 'flex'; // Use flex to re-center the emoji
+        showTimerBtn.style.display = 'flex';
     });
-    // --- END OF NEW TIMER TOGGLE LOGIC ---
-
-    // Attach all event listeners
+    
     document.getElementById('selectExerciseBtn').addEventListener('click', openExerciseModal);
     document.getElementById('closeModalTopBtn').addEventListener('click', closeExerciseModal);
     document.getElementById('closeModalBottomBtn').addEventListener('click', closeExerciseModal);
     document.getElementById('addOrUpdateExerciseBtn').addEventListener('click', addOrUpdateExercise);
-    document.getElementById('saveWorkoutPresetBtn').addEventListener('click', saveWorkoutPreset);
+    
+    document.getElementById('savePlanBtn').addEventListener('click', saveWorkoutPlan);
+    document.getElementById('startWorkoutBtn').addEventListener('click', startWorkout);
+    document.getElementById('finishWorkoutBtn').addEventListener('click', finishWorkout);
+    document.getElementById('cancelWorkoutBtn').addEventListener('click', cancelWorkout);
+    
     document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDeletePreset);
     document.getElementById('weightUnitBtn').addEventListener('click', toggleWeightUnit);
     document.getElementById('presetSelect').addEventListener('change', loadPreset);
     document.getElementById('backToDashboardBtn').addEventListener('click', () => {
-        localStorage.removeItem('currentWorkout');
-        window.location.href = 'index.html';
+        if (isLiveMode) {
+            if (confirm('You have a workout in progress. Are you sure you want to leave without saving?')) {
+                localStorage.removeItem('currentWorkout');
+                window.location.href = '../index.html';
+            }
+        } else {
+            localStorage.removeItem('currentWorkout');
+            window.location.href = '../index.html';
+        }
     });
 
-    // Timer buttons
+    // UPDATED: Event listeners for exercise history
+    const exerciseInput = document.getElementById('exerciseInput');
+    exerciseInput.addEventListener('blur', () => {
+        const exerciseName = exerciseInput.value.trim();
+        if (exerciseName) {
+            displayExerciseHistory(exerciseName);
+        }
+    });
+    exerciseInput.addEventListener('input', () => {
+        if (!exerciseInput.value.trim()) {
+            hideExerciseHistory();
+        }
+    });
+
     document.getElementById('startTimerBtn').addEventListener('click', startTimer);
     document.getElementById('stopTimerBtn').addEventListener('click', stopTimer);
     document.getElementById('resetTimerBtn').addEventListener('click', resetTimer);
 
-    // Event delegation for dynamically created elements
     document.getElementById('workoutPlan').addEventListener('click', (e) => {
         if (e.target.classList.contains('edit-btn')) {
             editExercise(e.target.dataset.index);
         }
         if (e.target.classList.contains('remove-btn')) {
             removeExercise(e.target.dataset.index);
+        }
+        if (e.target.classList.contains('set-checkbox')) {
+            const exIndex = e.target.dataset.exIndex;
+            const setIndex = e.target.dataset.setIndex;
+            currentWorkout.exercises[exIndex].completed[setIndex] = e.target.checked;
+            e.target.parentElement.classList.toggle('checked', e.target.checked);
+            saveCurrentWorkout();
         }
     });
     

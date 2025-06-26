@@ -30,10 +30,17 @@
 
         <!-- Main Dashboard -->
         <div class="main-content" id="mainContent">
+            <!-- ===== HEADER UPDATED ===== -->
             <div class="header">
-                <div class="welcome-text" id="greeting">Welcome back!</div>
-                <div class="subtitle">Ready to crush your fitness goals?</div>
+                <div class="header-text">
+                    <div class="welcome-text" id="greeting">Welcome back!</div>
+                    <div class="subtitle">Ready to crush your fitness goals?</div>
+                </div>
+                <button class="profile-toggle-btn" id="profileToggleBtn">
+                    My Profile
+                </button>
             </div>
+            <!-- ===== END OF UPDATE ===== -->
 
             <div class="action-section">
                 <button class="primary-button" id="addWorkoutBtn">
@@ -62,17 +69,18 @@
                     </div>
                 </div>
 
+                <!-- ===== "SAVED WORKOUTS" CARD UPDATED ===== -->
                 <div class="dashboard-card">
                     <div class="card-title">
                         <span class="card-icon">💪</span>
-                        Saved Workouts
+                        Workout History
                     </div>
                     <div class="card-content">
-                        <ul class="preset-list" id="presetList">
-                            <li class="empty-state">No presets saved yet</li>
-                        </ul>
+                        <p style="margin-bottom: 1.5rem;">Review all your completed sessions to see your progress over time.</p>
+                        <button class="secondary-button" id="viewHistoryBtn" style="width: 100%;">View Workout History</button>
                     </div>
                 </div>
+                <!-- ===== END OF UPDATE ===== -->
 
                 <div class="dashboard-card">
                     <div class="card-title">
@@ -91,6 +99,50 @@
             </div>
         </div>
     </div>
+    
+    <!-- ===== NEW WORKOUT HISTORY MODAL ADDED ===== -->
+    <div class="modal" id="historyModal">
+        <div class="modal-content">
+            <button class="close-modal-top" id="closeHistoryBtn">×</button>
+            <h3 class="modal-title">Workout Session History</h3>
+            <div id="historyList">
+                <!-- Session history will be populated here by JS -->
+            </div>
+        </div>
+    </div>
+    <!-- ===== END OF ADDED MODAL ===== -->
+
+    <!-- ==========================================================================
+       PROFILE PANEL & TOGGLE BUTTON
+       ========================================================================== -->
+    <div class="profile-panel" id="profilePanel">
+        <div class="profile-header">
+            <h3>My Profile</h3>
+            <button class="close-profile-btn" id="closeProfileBtn">→</button>
+        </div>
+        <div class="profile-content" id="profileContent">
+            <div class="profile-avatar" id="profileAvatar">RG</div>
+            <h2 class="profile-name" id="profileName">User</h2>
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalWorkouts">0</div>
+                    <div class="stat-label">Total Workouts</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="favoriteExercise">None</div>
+                    <div class="stat-label">Favorite Exercise</div>
+                </div>
+            </div>
+            <!-- ===== LINK TO PROGRESS PAGE ADDED ===== -->
+            <a href="progress.html" class="primary-button" style="width: 100%; margin-top: 2rem; text-decoration: none; text-align: center; display: inline-block;">
+                View Progress Graphs
+            </a>
+            <!-- ===== END OF ADDED LINK ===== -->
+        </div>
+    </div>
+    <!-- ==========================================================================
+       END OF SECTION
+       ========================================================================== -->
 
     <script src="src/js/dashboard.js"></script>
 </body>
