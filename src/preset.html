@@ -3,107 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitTrack - Workout Preset</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>repGraph - Workout Preset</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/app.css">
 </head>
-<!-- ADDED CLASS HERE -->
 <body class="preset-page">
-    <button id="backToDashboardBtn" class="secondary-button back-to-top-left-btn">< Back to Dashboard</button>
+    <button id="backToDashboardBtn" class="secondary-button back-to-top-left-btn">
+        <span class="button-arrow rotate-180">→</span>
+        <span>Back to Dashboard</span>
+    </button>
     <div class="container">
-        <h1 id="pageTitle">💪 Plan Your Workout</h1>
+        <div class="page-header">
+            <h1 id="pageTitle">
+                <span class="page-icon">💪</span>
+                Plan Your Workout
+            </h1>
+            <p class="page-subtitle">Create and customize your perfect workout routine</p>
+        </div>
         
         <!-- This entire block will be hidden during a live workout -->
         <div id="planningControls">
-            <div class="form-group">
-                <label>Workout Name:</label>
-                <input type="text" id="workoutName" placeholder="Enter workout name" class="input-field">
+            <div class="form-section">
+                <div class="form-group">
+                    <label>
+                        <span class="label-icon">📝</span>
+                        Workout Name
+                    </label>
+                    <div class="input-container">
+                        <input type="text" id="workoutName" placeholder="Enter workout name" class="input-field">
+                        <div class="input-underline"></div>
+                    </div>
+                </div>
             </div>
             
             <div class="preset-group">
-                <h3>Load/Delete Presets</h3>
+                <div class="section-header">
+                    <h3>
+                        <span class="section-icon">⚙️</span>
+                        Manage Presets
+                    </h3>
+                </div>
                 <div class="form-group">
                     <label>Load Preset:</label>
                     <select id="presetSelect" class="preset-select">
                         <option value="">Select a saved preset</option>
                     </select>
                 </div>
-                <div id="delete-controls-section" class="form-group" style="display: none; flex-direction: row; align-items: center; justify-content: space-between;">
-                    <label style="flex: 1; margin-bottom: 0;">Delete Preset:</label>
-                    <select id="deletePresetSelect" class="preset-select" style="flex: 2; margin-right: 10px;">
-                        <option value="">Select a preset to delete</option>
-                    </select>
-                    <button id="confirmDeleteBtn" class="secondary-button" style="flex: 1; margin: 0;">Confirm Delete</button>
+                <div id="delete-controls-section" class="form-group delete-section" style="display: none;">
+                    <label>Delete Preset:</label>
+                    <div class="delete-controls">
+                        <select id="deletePresetSelect" class="preset-select">
+                            <option value="">Select a preset to delete</option>
+                        </select>
+                        <button id="confirmDeleteBtn" class="danger-button">
+                            <span>🗑️</span>
+                            Delete
+                        </button>
+                    </div>
                 </div>
             </div>
             
-            <h3>Add Exercise</h3>
-            <div class="exercise-group">
-                <div class="form-group">
-                    <label>Exercise:</label>
-                    <input type="text" id="exerciseInput" placeholder="Type or select an exercise" class="input-field">
-                    <button id="selectExerciseBtn" class="secondary-button">Select</button>
+            <div class="form-section">
+                <div class="section-header">
+                    <h3>
+                        <span class="section-icon">➕</span>
+                        Add Exercise
+                    </h3>
+                </div>
+                <div class="exercise-form">
+                    <div class="exercise-group">
+                        <div class="form-group">
+                            <label>Exercise:</label>
+                            <div class="exercise-input-group">
+                                <input type="text" id="exerciseInput" placeholder="Type or select an exercise" class="input-field">
+                                <button id="selectExerciseBtn" class="secondary-button">
+                                    <span>📋</span>
+                                    Select
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-details">
+                        <div class="form-group">
+                            <label>Sets:</label>
+                            <input type="number" id="sets" placeholder="Sets" class="input-field">
+                        </div>
+                        <div class="form-group weight-group">
+                            <label>Weight:</label>
+                            <div class="weight-input-group">
+                                <input type="number" id="weight" placeholder="Weight" class="input-field">
+                                <button id="weightUnitBtn" class="weight-unit-btn">kg</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Reps:</label>
+                            <input type="number" id="reps" placeholder="Reps" class="input-field">
+                        </div>
+                    </div>
+                    
+                    <button id="addOrUpdateExerciseBtn" class="primary-button full-width">
+                        <span class="button-icon">➕</span>
+                        <span>Add Exercise</span>
+                    </button>
                 </div>
             </div>
-            <div class="form-group">
-                <label>Number of Sets:</label>
-                <input type="number" id="sets" placeholder="Enter number of sets" class="input-field">
-            </div>
-            <div class="form-group weight-group">
-                <label>Weight:</label>
-                <input type="number" id="weight" placeholder="Enter weight" class="input-field">
-                <button id="weightUnitBtn" class="weight-unit-btn">kg</button>
-            </div>
-            <div class="form-group">
-                <label>Reps per Set:</label>
-                <input type="number" id="reps" placeholder="Enter reps per set" class="input-field">
-            </div>
-            <button id="addOrUpdateExerciseBtn" class="primary-button">Add Exercise</button>
         </div>
         
-        <h3>Current Workout Plan</h3>
-        <div class="workout-plan" id="workoutPlan">
-            <div class="empty-state">No exercises added yet.</div>
+        <!-- Exercise History Container (initially hidden) -->
+        <div id="exerciseHistoryContainer" class="exercise-history-container" style="display: none;">
+            <h4>
+                <span class="history-icon">📊</span>
+                Recent Performance
+            </h4>
+            <div id="exerciseHistoryContent">
+                <!-- History entries will be populated here -->
+            </div>
+        </div>
+        
+        <div class="workout-section">
+            <div class="section-header">
+                <h3>
+                    <span class="section-icon">📋</span>
+                    Current Workout Plan
+                </h3>
+            </div>
+            <div class="workout-plan" id="workoutPlan">
+                <div class="empty-state">
+                    <div class="empty-icon">🏋️</div>
+                    <p>No exercises added yet</p>
+                    <span>Start building your workout above</span>
+                </div>
+            </div>
         </div>
 
-        <!-- ===== BUTTONS UPDATED ===== -->
         <div class="action-buttons-container">
             <!-- Planning Mode Buttons -->
-            <button id="startWorkoutBtn" class="primary-button">Start Workout</button>
-            <button id="savePlanBtn" class="secondary-button">Save Plan Only</button>
+            <button id="startWorkoutBtn" class="primary-button pulse-on-hover">
+                <span class="button-icon">🚀</span>
+                <span>Start Workout</span>
+                <span class="button-glow"></span>
+            </button>
+            <button id="savePlanBtn" class="secondary-button">
+                <span class="button-icon">💾</span>
+                <span>Save Plan Only</span>
+            </button>
 
             <!-- Live Mode Buttons (hidden by default) -->
-            <button id="finishWorkoutBtn" class="primary-button" style="display:none;">Finish & Save Workout</button>
-            <button id="cancelWorkoutBtn" class="secondary-button" style="display:none;">Cancel Workout</button>
+            <button id="finishWorkoutBtn" class="success-button" style="display:none;">
+                <span class="button-icon">✅</span>
+                <span>Finish & Save Workout</span>
+            </button>
+            <button id="cancelWorkoutBtn" class="danger-button" style="display:none;">
+                <span class="button-icon">❌</span>
+                <span>Cancel Workout</span>
+            </button>
         </div>
-        <!-- ===== END OF UPDATE ===== -->
     </div>
     
     <button id="showTimerBtn" class="timer-toggle-btn">
-        <h3><span style="font-size: 1.5rem; margin-right: 10px;">⏱️</span> Rest Timer</h3>
+        <div class="timer-content">
+            <span class="timer-icon">⏱️</span>
+            <span>Rest Timer</span>
+        </div>
     </button>
 
     <!-- This timer pop-up is hidden by default -->
     <div class="rest-timer">
         <button id="closeTimerBtn" class="close-timer-btn">×</button>
-        <h3>
-            Rest Timer <canvas id="stopwatchCanvas" width="60" height="60"></canvas>
-        </h3>
-        <div id="timerDisplay" style="font-size: 2rem; font-weight: bold; margin-bottom: 10px; color: var(--accent-color);">5:00</div>
-        <button id="startTimerBtn" class="start-button">Start Timer</button>
-        <button id="stopTimerBtn" class="stop-button">Stop</button>
-        <button id="resetTimerBtn" class="reset-button">Reset</button>
+        <div class="timer-header">
+            <h3>Rest Timer</h3>
+            <canvas id="stopwatchCanvas" width="60" height="60"></canvas>
+        </div>
+        <div id="timerDisplay" class="timer-display">5:00</div>
+        <div class="timer-controls">
+            <button id="startTimerBtn" class="start-button">
+                <span>▶️</span>
+                Start
+            </button>
+            <button id="stopTimerBtn" class="stop-button">
+                <span>⏸️</span>
+                Stop
+            </button>
+            <button id="resetTimerBtn" class="reset-button">
+                <span>🔄</span>
+                Reset
+            </button>
+        </div>
     </div>
 
     <div id="exerciseModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content large-modal">
             <button id="closeModalTopBtn" class="close-modal-top">×</button>
-            <h3 class="modal-title">Select Exercise</h3>
+            <div class="modal-header">
+                <h3 class="modal-title">Select Exercise</h3>
+                <p class="modal-subtitle">Choose from our exercise library</p>
+            </div>
             <div class="category-buttons" id="categoryButtons">
                 <!-- Buttons will be generated by JS -->
             </div>
-            <div id="exerciseCategories"></div>
-            <button id="closeModalBottomBtn" class="primary-button close-modal">Close</button>
+            <div id="exerciseCategories" class="exercise-categories"></div>
+            <button id="closeModalBottomBtn" class="secondary-button full-width">
+                <span>Close</span>
+            </button>
         </div>
     </div>
 

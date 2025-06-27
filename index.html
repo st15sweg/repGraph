@@ -4,95 +4,143 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>repGraph - Your Personal Workout Companion</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="src/css/app.css">
 </head>
-<!-- ADDED CLASS HERE -->
 <body class="dashboard-page"> 
     <div class="container">
         <div class="landing" id="landingPage">
-            <!-- ... rest of the file is unchanged ... -->
-            <div class="brand-logo">repGraph</div>
+            <div class="brand-logo">
+                <span class="logo-icon">💪</span>
+                repGraph
+            </div>
             <div class="brand-subtitle">Your Personal Workout Companion</div>
+            <div class="feature-highlights">
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    <span>Track Progress</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🎯</span>
+                    <span>Set Goals</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🏆</span>
+                    <span>Achieve More</span>
+                </div>
+            </div>
             <button class="cta-button" id="getStartedBtn">
-                Get Started
+                <span>Get Started</span>
+                <span class="button-arrow">→</span>
             </button>
         </div>
 
         <!-- Name Input Modal -->
         <div class="modal" id="nameModal">
             <div class="modal-content">
-                <h3 class="modal-title">Welcome to repGraph!</h3>
-                <input type="text" class="input-field" id="userName" placeholder="Enter your name">
-                <button class="cta-button" id="saveNameBtn">Continue</button>
+                <div class="modal-header">
+                    <h3 class="modal-title">Welcome to repGraph!</h3>
+                    <p class="modal-subtitle">Let's get you started on your fitness journey</p>
+                </div>
+                <div class="input-container">
+                    <input type="text" class="input-field" id="userName" placeholder="Enter your name">
+                    <div class="input-underline"></div>
+                </div>
+                <button class="cta-button" id="saveNameBtn">
+                    <span>Continue</span>
+                    <span class="button-arrow">→</span>
+                </button>
             </div>
         </div>
 
         <!-- Main Dashboard -->
         <div class="main-content" id="mainContent">
-            <!-- ===== HEADER UPDATED ===== -->
             <div class="header">
                 <div class="header-text">
                     <div class="welcome-text" id="greeting">Welcome back!</div>
                     <div class="subtitle">Ready to crush your fitness goals?</div>
                 </div>
                 <button class="profile-toggle-btn" id="profileToggleBtn">
+                    <span class="profile-icon">👤</span>
                     My Profile
                 </button>
             </div>
-            <!-- ===== END OF UPDATE ===== -->
 
             <div class="action-section">
-                <button class="primary-button" id="addWorkoutBtn">
-                    🏋️ + Add Workout
+                <button class="primary-button pulse-on-hover" id="addWorkoutBtn">
+                    <span class="button-icon">🏋️</span>
+                    <span>Add Workout</span>
+                    <span class="button-glow"></span>
                 </button>
             </div>
 
             <div class="preset-section">
-                <div class="preset-title">Quick Start</div>
+                <div class="preset-header">
+                    <div class="preset-title">
+                        <span class="section-icon">⚡</span>
+                        Quick Start
+                    </div>
+                </div>
                 <select class="preset-select" id="presetSelect">
                     <option value="">Select a saved workout</option>
                 </select>
                 <button class="secondary-button" id="continuePresetBtn">
-                    Continue Workout
+                    <span>Continue Workout</span>
+                    <span class="button-arrow">→</span>
                 </button>
             </div>
 
             <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <div class="card-title">
-                        <span class="card-icon">📊</span>
-                        Last Workout
+                <div class="dashboard-card card-hover-effect">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-icon">📊</span>
+                            Last Workout
+                        </div>
+                        <div class="card-badge">Recent</div>
                     </div>
                     <div class="card-content" id="summaryContent">
                         <div class="empty-state">No workouts completed yet</div>
                     </div>
                 </div>
 
-                <!-- ===== "SAVED WORKOUTS" CARD UPDATED ===== -->
-                <div class="dashboard-card">
-                    <div class="card-title">
-                        <span class="card-icon">💪</span>
-                        Workout History
+                <div class="dashboard-card card-hover-effect">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-icon">💪</span>
+                            Workout History
+                        </div>
+                        <div class="card-badge">Archive</div>
                     </div>
                     <div class="card-content">
-                        <p style="margin-bottom: 1.5rem;">Review all your completed sessions to see your progress over time.</p>
-                        <button class="secondary-button" id="viewHistoryBtn" style="width: 100%;">View Workout History</button>
+                        <p class="card-description">Review all your completed sessions to see your progress over time.</p>
+                        <button class="secondary-button full-width" id="viewHistoryBtn">
+                            <span>View Workout History</span>
+                            <span class="button-arrow">→</span>
+                        </button>
                     </div>
                 </div>
-                <!-- ===== END OF UPDATE ===== -->
 
-                <div class="dashboard-card">
-                    <div class="card-title">
-                        <span class="card-icon">🎯</span>
-                        Motivation
+                <div class="dashboard-card card-hover-effect">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-icon">🎯</span>
+                            Motivation
+                        </div>
+                        <div class="card-badge">Daily</div>
                     </div>
                     <div class="card-content">
                         <div class="viz-container">
                             <div class="fitness-icon">🏆</div>
+                            <div class="motivation-rings">
+                                <div class="ring ring-1"></div>
+                                <div class="ring ring-2"></div>
+                                <div class="ring ring-3"></div>
+                            </div>
                         </div>
-                        <div style="text-align: center; margin-top: 1rem;">
+                        <div class="motivation-text">
                             <strong>Keep pushing your limits!</strong>
+                            <p>Every rep counts towards your goals</p>
                         </div>
                     </div>
                 </div>
@@ -100,28 +148,31 @@
         </div>
     </div>
     
-    <!-- ===== NEW WORKOUT HISTORY MODAL ADDED ===== -->
+    <!-- Workout History Modal -->
     <div class="modal" id="historyModal">
-        <div class="modal-content">
+        <div class="modal-content large-modal">
             <button class="close-modal-top" id="closeHistoryBtn">×</button>
-            <h3 class="modal-title">Workout Session History</h3>
-            <div id="historyList">
+            <div class="modal-header">
+                <h3 class="modal-title">Workout Session History</h3>
+                <p class="modal-subtitle">Track your fitness journey</p>
+            </div>
+            <div id="historyList" class="history-container">
                 <!-- Session history will be populated here by JS -->
             </div>
         </div>
     </div>
-    <!-- ===== END OF ADDED MODAL ===== -->
 
-    <!-- ==========================================================================
-       PROFILE PANEL & TOGGLE BUTTON
-       ========================================================================== -->
+    <!-- Profile Panel -->
     <div class="profile-panel" id="profilePanel">
         <div class="profile-header">
             <h3>My Profile</h3>
-            <button class="close-profile-btn" id="closeProfileBtn">→</button>
+            <button class="close-profile-btn" id="closeProfileBtn">×</button>
         </div>
         <div class="profile-content" id="profileContent">
-            <div class="profile-avatar" id="profileAvatar">RG</div>
+            <div class="profile-avatar-container">
+                <div class="profile-avatar" id="profileAvatar">RG</div>
+                <div class="avatar-ring"></div>
+            </div>
             <h2 class="profile-name" id="profileName">User</h2>
             <div class="profile-stats">
                 <div class="stat-item">
@@ -133,16 +184,13 @@
                     <div class="stat-label">Favorite Exercise</div>
                 </div>
             </div>
-            <!-- ===== LINK TO PROGRESS PAGE ADDED ===== -->
-            <a href="progress.html" class="primary-button" style="width: 100%; margin-top: 2rem; text-decoration: none; text-align: center; display: inline-block;">
-                View Progress Graphs
+            <a href="progress.html" class="primary-button full-width progress-link">
+                <span class="button-icon">📈</span>
+                <span>View Progress Graphs</span>
+                <span class="button-arrow">→</span>
             </a>
-            <!-- ===== END OF ADDED LINK ===== -->
         </div>
     </div>
-    <!-- ==========================================================================
-       END OF SECTION
-       ========================================================================== -->
 
     <script src="src/js/dashboard.js"></script>
 </body>
