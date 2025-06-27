@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>repGraph - Progress</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/css/app.css">
+</head>
+<body class="progress-page">
+    <button class="secondary-button back-to-top-left-btn" onclick="window.location.href='index.html'">
+        <span class="button-arrow rotate-180">→</span>
+        <span>Back to Dashboard</span>
+    </button>
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                <span class="page-icon">📈</span>
+                Track Your Progress
+            </h1>
+            <p class="page-subtitle">Visualize your fitness journey and celebrate your achievements</p>
+        </div>
+        
+        <div class="progress-controls">
+            <div class="form-group">
+                <label for="exerciseSelect">
+                    <span class="label-icon">🏋️</span>
+                    Select Exercise
+                </label>
+                <select id="exerciseSelect" class="preset-select"></select>
+            </div>
+            <div class="form-group">
+                <label for="metricSelect">
+                    <span class="label-icon">📊</span>
+                    Select Metric
+                </label>
+                <select id="metricSelect" class="preset-select">
+                    <option value="maxWeight">Max Weight Lifted</option>
+                    <option value="totalVolume">Total Volume (Sets×Reps×Weight)</option>
+                    <option value="bestSet">Best Set (Reps×Weight)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3>Progress Chart</h3>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color"></div>
+                        <span>Your Progress</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add this helpful message section -->
+            <div id="noDataMessage" class="empty-state" style="display: none;">
+                <div class="empty-icon">📊</div>
+                <p>No workout data available yet</p>
+                <span>Complete some workouts first, then return here to track your progress!</span>
+                <a href="index.html" class="secondary-button" style="margin-top: 1rem; text-decoration: none; display: inline-flex;">
+                    <span class="button-arrow rotate-180">→</span>
+                    <span>Start Your First Workout</span>
+                </a>
+            </div>
+            
+            <canvas id="progressChart" width="800" height="400"></canvas>
+        </div>
+        
+    </div>
+
+    <!-- Chart.js library from CDN - Updated to latest version -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <!-- Custom script for this page -->
+    <script src="src/js/progress.js"></script>
+</body>
+</html>
