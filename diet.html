@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>repGraph - Diet Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/css/app.css">
+</head>
+<body class="diet-page">
+    <button class="secondary-button back-to-top-left-btn" onclick="window.location.href='index.html'">
+        <span class="button-arrow rotate-180">→</span>
+        <span>Back to Dashboard</span>
+    </button>
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                <span class="page-icon">🥗</span>
+                Track Your Diet
+            </h1>
+            <p class="page-subtitle">Log your meals to stay on top of your nutrition goals.</p>
+        </div>
+
+        <!-- Diet Summary -->
+        <div class="diet-summary-grid">
+            <div class="summary-card">
+                <div class="stat-label">🔥 Calories</div>
+                <div class="stat-value" id="totalCalories">0</div>
+            </div>
+            <div class="summary-card">
+                <div class="stat-label">🍗 Protein</div>
+                <div class="stat-value" id="totalProtein">0g</div>
+            </div>
+            <div class="summary-card">
+                <div class="stat-label">🍞 Carbs</div>
+                <div class="stat-value" id="totalCarbs">0g</div>
+            </div>
+            <div class="summary-card">
+                <div class="stat-label">🥑 Fat</div>
+                <div class="stat-value" id="totalFat">0g</div>
+            </div>
+        </div>
+
+        <!-- Add Food Form -->
+        <div class="form-section" style="width: 100%;">
+            <div class="section-header">
+                <h3>
+                    <span class="section-icon">➕</span>
+                    Log a Food Item
+                </h3>
+            </div>
+            <form id="addFoodForm" class="exercise-form">
+                <div class="form-group">
+                    <label>Food Name:</label>
+                    <input type="text" id="foodName" placeholder="e.g., Chicken Breast" class="input-field" required>
+                </div>
+                <div class="exercise-details">
+                    <div class="form-group">
+                        <label>Calories:</label>
+                        <input type="number" id="calories" placeholder="kcal" class="input-field" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Protein (g):</label>
+                        <input type="number" id="protein" placeholder="grams" class="input-field" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Carbs (g):</label>
+                        <input type="number" id="carbs" placeholder="grams" class="input-field" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fat (g):</label>
+                        <input type="number" id="fat" placeholder="grams" class="input-field" required>
+                    </div>
+                </div>
+                <button type="submit" class="primary-button full-width">
+                    <span class="button-icon">➕</span>
+                    <span>Add Food</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Today's Log -->
+        <div class="food-log-section">
+            <div class="section-header">
+                <h3>
+                    <span class="section-icon">📋</span>
+                    Today's Log
+                </h3>
+            </div>
+            <div id="foodLogList" class="food-log-list">
+                <!-- Food items will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/diet.js"></script>
+</body>
+</html>
