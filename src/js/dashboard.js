@@ -153,6 +153,61 @@ function displayLastWorkoutSummary() {
   summaryDiv.innerHTML = html
 }
 
+// NEW: Displays today's diet summary on the dashboard
+function displayTodaysDietSummary() {
+  const summaryContainer = document.getElementById("dietSummaryContent");
+  const getTodaysDateString = () => new Date().toISOString().split('T')[0];
+  const fullLog = JSON.parse(localStorage.getItem("dietLog") || "{}");
+  const todaysLog = fullLog[getTodaysDateString()] || [];
+
+  if (todaysLog.length === 0) {
+    summaryContainer.innerHTML = `
+      <div class="empty-state" style="padding: 1rem 0;">
+          <div class="empty-icon">🥗</div>
+          <p>No meals logged today.</p>
+          <span>Click below to add your first meal!</span>
+      </div>
+      <a href="diet.html" class="secondary-button full-width" style="margin-top: 1.5rem; text-decoration: none;">
+          <span>Log Your First Meal</span>
+          <span class="button-arrow">→</span>
+      </a>`;
+    return;
+  }
+
+  const totals = todaysLog.reduce((acc, food) => {
+      acc.calories += food.calories;
+      acc.protein += food.protein;
+      acc.carbs += food.carbs;
+      acc.fat += food.fat;
+      return acc;
+  }, { calories: 0, protein: 0, carbs: 0, fat: 0 });
+
+  summaryContainer.innerHTML = `
+    <div class="diet-summary-dashboard">
+        <div class="diet-stat">
+            <span class="stat-label">🔥 Calories</span>
+            <span class="stat-value">${totals.calories}</span>
+        </div>
+        <div class="diet-stat">
+            <span class="stat-label">🍗 Protein</span>
+            <span class="stat-value">${totals.protein.toFixed(1)}g</span>
+        </div>
+        <div class="diet-stat">
+            <span class="stat-label">🍞 Carbs</span>
+            <span class="stat-value">${totals.carbs.toFixed(1)}g</span>
+        </div>
+        <div class="diet-stat">
+            <span class="stat-label">🥑 Fat</span>
+            <span class="stat-value">${totals.fat.toFixed(1)}g</span>
+        </div>
+    </div>
+    <a href="diet.html" class="secondary-button full-width" style="margin-top: 1.5rem; text-decoration: none;">
+        <span>View Full Diet Log</span>
+        <span class="button-arrow">→</span>
+    </a>
+  `;
+}
+
 function saveName() {
   const userNameInput = document.getElementById("userName")
   const userName = userNameInput.value.trim()
@@ -166,6 +221,7 @@ function saveName() {
     displayLastWorkoutSummary()
     populatePresetSelect()
     populateProfilePanel()
+    displayTodaysDietSummary() // Add this call
   } else {
     alert("Please enter your name to continue.")
   }
@@ -186,6 +242,7 @@ function checkName() {
     displayLastWorkoutSummary()
     populatePresetSelect()
     populateProfilePanel()
+    displayTodaysDietSummary() // Add this call
   } else {
     document.getElementById("landingPage").style.display = "flex"
     document.getElementById("profileToggleBtn").style.display = "none"

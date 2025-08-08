@@ -98,147 +98,6 @@ body::before {
 .diet-page .container {
   max-width: 1200px;
   align-items: center;
-}```
-
-**Next, go to the very end of the `src/css/app.css` file and add these new style rules:**
-
-```css
-/* ==========================================================================
-   22. Diet Page Styles
-   ========================================================================== */
-.diet-summary-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  width: 100%;
-  margin-bottom: 2rem;
-}
-
-.summary-card {
-  background: var(--card-bg);
-  border-radius: var(--border-radius);
-  padding: 1.5rem;
-  border: 1px solid var(--border-color);
-  text-align: center;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition);
-}
-
-.summary-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--accent-color);
-}
-
-.summary-card .stat-label {
-  font-size: 1rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-weight: 500;
-}
-
-.summary-card .stat-value {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: var(--accent-color);
-}
-
-.food-log-section {
-  width: 100%;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: 2rem;
-  margin-top: 1rem;
-  box-shadow: var(--shadow-sm);
-}
-
-.food-log-list {
-  list-style: none;
-  padding: 0;
-}
-
-.food-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.25rem;
-  margin-bottom: 1rem;
-  background: var(--secondary-bg);
-  border-radius: var(--border-radius-sm);
-  border-left: 4px solid var(--success-color);
-  transition: var(--transition);
-}
-
-.food-item:last-child {
-  margin-bottom: 0;
-}
-
-.food-item:hover {
-  transform: translateX(4px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--success-color);
-}
-
-.food-item-details {
-  flex-grow: 1;
-}
-
-.food-item-details strong {
-  color: var(--text-primary);
-  font-size: 1.1rem;
-}
-
-.food-item-macros {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  margin-top: 0.5rem;
-}
-
-.food-item .remove-btn {
-  background: var(--error-color);
-  padding: 0.5rem 1rem;
-  font-size: 0.85rem;
-  border-radius: var(--border-radius-sm);
-  border: none;
-  color: var(--text-primary);
-  cursor: pointer;
-  margin-left: 1rem;
-  font-weight: 500;
-  transition: var(--transition);
-}
-
-.food-item .remove-btn:hover {
-  background: #d43737;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
-}
-
-@media (max-width: 768px) {
-  .diet-summary-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 480px) {
-    .food-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-    
-    .food-item .remove-btn {
-        margin-left: 0;
-        width: 100%;
-        justify-content: center;
-    }
 }
 
 /* ==========================================================================
@@ -2123,4 +1982,240 @@ body::before {
     box-shadow: none;
     border: 1px solid #ccc;
   }
+}
+
+/* ==========================================================================
+   22. Diet Page Styles
+   ========================================================================== */
+.diet-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.summary-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-color);
+}
+
+.summary-card .stat-label {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.summary-card .stat-value {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--accent-color);
+}
+
+.food-log-section {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  margin-top: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.food-log-list {
+  list-style: none;
+  padding: 0;
+}
+
+.food-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  background: var(--secondary-bg);
+  border-radius: var(--border-radius-sm);
+  border-left: 4px solid var(--success-color);
+  transition: var(--transition);
+}
+
+.food-item:last-child {
+  margin-bottom: 0;
+}
+
+.food-item:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--success-color);
+}
+
+.food-item-details {
+  flex-grow: 1;
+}
+
+.food-item-details strong {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+.food-item-macros {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.food-item .remove-btn {
+  background: var(--error-color);
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border-radius: var(--border-radius-sm);
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  margin-left: 1rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.food-item .remove-btn:hover {
+  background: #d43737;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 768px) {
+  .diet-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+    .food-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .food-item .remove-btn {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ==========================================================================
+   23. Diet Summary on Dashboard
+   ========================================================================== */
+.diet-summary-dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+}
+
+.diet-stat {
+  background: var(--secondary-bg);
+  border-radius: var(--border-radius-sm);
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid var(--border-color);
+}
+
+.diet-stat .stat-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.diet-stat .stat-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent-light);
+  display: block;
+}
+/* ==========================================================================
+   24. Autocomplete Styles for Diet Tracker
+   ========================================================================== */
+.autocomplete-container {
+  position: relative;
+  width: 100%;
+}
+
+.autocomplete-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-top: none;
+  border-radius: 0 0 var(--border-radius-sm) var(--border-radius-sm);
+  z-index: 99;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.autocomplete-item {
+  padding: 1rem 1.25rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.autocomplete-item:hover {
+  background: var(--accent-color);
+  color: var(--text-primary);
+}
+
+.autocomplete-item:not(:last-child) {
+  border-bottom: 1px solid var(--border-color);
+}
+/* ==========================================================================
+   25. Quantity Input Styles
+   ========================================================================== */
+.quantity-input-group {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.quantity-input-group .input-field {
+  border-right: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.quantity-unit-label {
+  display: flex;
+  align-items: center;
+  padding: 0 1.25rem;
+  background: var(--secondary-bg);
+  border: 2px solid var(--border-color);
+  border-left: 1px solid var(--border-color);
+  border-top-right-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 1rem;
 }
