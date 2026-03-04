@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>repGraph - Diet Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Modular Stylesheets -->
+    <link rel="stylesheet" href="src/css/modules/base.css">
+    <link rel="stylesheet" href="src/css/modules/components.css">
+    <link rel="stylesheet" href="src/css/modules/diet.css">
+    <link rel="stylesheet" href="src/css/modules/utility.css">
+</head>
+<body class="diet-page">
+    <button class="secondary-button back-to-top-left-btn" onclick="window.location.href='index.html'">
+        <span class="button-arrow rotate-180">→</span>
+        <span>Back to Dashboard</span>
+    </button>
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                <span class="page-icon">🥗</span>
+                Track Your Diet
+            </h1>
+            <p class="page-subtitle">Log your meals to stay on top of your nutrition goals.</p>
+        </div>
+
+        <!-- Diet Summary -->
+        <div class="diet-summary-grid">
+            <div class="summary-card">
+                <div class="stat-label">🔥 Calories</div>
+                <div class="stat-value" id="totalCalories">0</div>
+            </div>
+            <div class="summary-card">
+                <div class="stat-label">🍗 Protein (Total)</div>
+                <div class="stat-value" id="totalProtein">0g</div>
+            </div>
+            <div class="summary-card">
+                <div class="stat-label">✅ Protein (Quality)</div>
+                <div class="stat-value" id="totalQualityProtein">0g</div>
+            </div>
+            <div class="summary-card">
+                <div class="stat-label">🍞 Carbs</div>
+                <div class="stat-value" id="totalCarbs">0g</div>
+            </div>
+            <div class="summary-card">
+                <div class="stat-label">🥑 Fat</div>
+                <div class="stat-value" id="totalFat">0g</div>
+            </div>
+        </div>
+
+        <!-- Add Food Form -->
+        <div class="form-section" style="width: 100%;">
+            <div class="section-header">
+                <h3>
+                    <span class="section-icon">➕</span>
+                    Log a Food Item
+                </h3>
+            </div>
+            <form id="addFoodForm" class="exercise-form">
+                <div class="form-group">
+                    <label>Food Name:</label>
+                    <div class="autocomplete-container">
+                        <input type="text" id="foodName" placeholder="Search for a food (e.g., Chicken)" class="input-field" required autocomplete="off">
+                        <div id="autocompleteResults" class="autocomplete-results"></div>
+                    </div>
+                </div>
+
+                <!-- NEW: Quantity Input -->
+                <div class="form-group">
+                    <label>Quantity:</label>
+                    <div class="quantity-input-group">
+                        <input type="number" id="foodQuantity" placeholder="e.g., 150" class="input-field" step="any">
+                        <span id="quantityUnit" class="quantity-unit-label">g</span>
+                    </div>
+                </div>
+
+                <div class="exercise-details" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+                    <div class="form-group">
+                        <label>Calories:</label>
+                        <input type="number" id="calories" placeholder="kcal" class="input-field" required step="any">
+                    </div>
+                    <div class="form-group">
+                        <label>Protein (g):</label>
+                        <input type="number" id="protein" placeholder="grams" class="input-field" required step="any">
+                    </div>
+                    <div class="form-group">
+                        <label>Carbs (g):</label>
+                        <input type="number" id="carbs" placeholder="grams" class="input-field" required step="any">
+                    </div>
+                    <div class="form-group">
+                        <label>Fat (g):</label>
+                        <input type="number" id="fat" placeholder="grams" class="input-field" required step="any">
+                    </div>
+                    <div class="form-group">
+                        <label title="Protein Digestibility-Corrected Amino Acid Score. Default is 1.0 (highest quality).">
+                            PDCAAS (0.0 - 1.0)
+                        </label>
+                        <input type="number" id="pdcaas" placeholder="e.g., 1.0 for whey" class="input-field" step="0.01" min="0" max="1">
+                    </div>
+                </div>
+                <button type="submit" class="primary-button full-width">
+                    <span class="button-icon">➕</span>
+                    <span>Add Food</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Today's Log -->
+        <div class="food-log-section">
+            <div class="section-header">
+                <h3>
+                    <span class="section-icon">📋</span>
+                    Today's Log
+                </h3>
+            </div>
+            <div id="foodLogList" class="food-log-list">
+                <!-- Food items will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/diet.js"></script>
+</body>
+</html>

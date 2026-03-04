@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>repGraph - Your Personal Workout Companion</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="src/css/app.css">
+    <!-- Modular Stylesheets -->
+    <link rel="stylesheet" href="src/css/modules/base.css">
+    <link rel="stylesheet" href="src/css/modules/components.css">
+    <link rel="stylesheet" href="src/css/modules/dashboard.css">
+    <link rel="stylesheet" href="src/css/modules/utility.css">
 </head>
 <body class="dashboard-page"> 
     <div class="container">
@@ -72,6 +76,11 @@
                     <span>Add Workout</span>
                     <span class="button-glow"></span>
                 </button>
+                 <a href="diet.html" class="primary-button pulse-on-hover">
+                    <span class="button-icon">🥗</span>
+                    <span>Track Diet</span>
+                    <span class="button-glow"></span>
+                </a>
             </div>
 
             <div class="preset-section">
@@ -124,24 +133,13 @@
                 <div class="dashboard-card card-hover-effect">
                     <div class="card-header">
                         <div class="card-title">
-                            <span class="card-icon">🎯</span>
-                            Motivation
+                            <span class="card-icon">🥗</span>
+                            Today's Diet Summary
                         </div>
-                        <div class="card-badge">Daily</div>
+                        <div class="card-badge">Nutrition</div>
                     </div>
-                    <div class="card-content">
-                        <div class="viz-container">
-                            <div class="fitness-icon">🏆</div>
-                            <div class="motivation-rings">
-                                <div class="ring ring-1"></div>
-                                <div class="ring ring-2"></div>
-                                <div class="ring ring-3"></div>
-                            </div>
-                        </div>
-                        <div class="motivation-text">
-                            <strong>Keep pushing your limits!</strong>
-                            <p>Every rep counts towards your goals</p>
-                        </div>
+                    <div class="card-content" id="dietSummaryContent">
+                        <!-- Diet summary will be populated here by JS -->
                     </div>
                 </div>
             </div>

@@ -1,0 +1,69 @@
+/* ==========================================================================
+   15. Progress Page Styles
+   ========================================================================== */
+.progress-controls {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  width: 100%;
+  box-shadow: var(--shadow-sm);
+}
+
+.progress-controls .form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.progress-controls .preset-select {
+  margin-bottom: 0;
+}
+
+.chart-container {
+  width: 100%;
+  padding: 2rem;
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.chart-header h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  background: var(--gradient-primary);
+  border-radius: 4px;
+}
